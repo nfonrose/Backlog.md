@@ -1,0 +1,56 @@
+# Lima VM configuration for Backlog.md development
+# Optimized with VirtioFS for I/O performance and Rosetta for architecture compatibility.
+
+vmType: "vz" # High-performance Virtualization.framework (requires macOS 13+)
+os: "Linux"
+mountType: "virtiofs" # Global mount type for high performance
+
+# New recommended location for Rosetta configuration
+vmOpts:
+  vz:
+    rosetta:
+      enabled: true
+      binfmt: true
+
+images:
+- location: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  arch: "x86_64"
+- location: "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-arm64.img"
+  arch: "aarch64"
+
+cpus: 4
+memory: "8GiB"
+
+mounts:
+- location: "/Users/teevity/Dev/misc/4.backlogMD/Backlog.md"
+  mountPoint: "/Users/teevity/Dev/misc/4.backlogMD/Backlog.md"
+  writable: true
+
+# Expose the Backlog.md web UI port
+portForwards:
+- guestPort: 6420
+  hostPort: 6420
+
+provision:
+- mode: system
+  script: |
+    #!/bin/bash
+    set -eux
+    apt-get update
+    apt-get install -y curl unzip git build-essential
+- mode: user
+  script: |
+    #!/bin/bash
+    set -eux
+    # Install Bun 1.2.23 (pinned version for stability as per DEVELOPMENT.md)
+    curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.23"
+    
+    # Setup shell environment
+    {
+      echo 'export BUN_INSTALL="$HOME/.bun"'
+      echo 'export PATH="$BUN_INSTALL/bin:$PATH"'
+      echo 'cd /Users/teevity/Dev/misc/4.backlogMD/Backlog.md'
+    } >> ~/.bashrc
+    
+    # Pre-configure git for the VM environment if needed
+    git config --global init.defaultBranch main
