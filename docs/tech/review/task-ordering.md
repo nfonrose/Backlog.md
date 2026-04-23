@@ -135,6 +135,8 @@ Pour rendre le fichier central plus "Merge Friendly", on pourrait :
 
 L'externalisation de l'ordre est une excellente solution pour la **propreté des commits**. Le coût principal est le risque accru de **conflits Git sur le fichier d'ordre** lors des merges fréquents. Pour un usage solo ou en petite équipe avec peu de réordonnancements massifs, le bénéfice en termes de clarté de l'historique Git est largement supérieur aux inconvénients.
 
+> **Note d'implémentation** : Ce mécanisme a été implémenté via l'option `centralized_tasks_ordinals`. Lorsqu'elle est activée, les ordinals sont stockés dans `backlog/task-ordinals.yml` et automatiquement retirés des fichiers `.md` lors de la sauvegarde.
+
 ## Analyse III - Tri de la colonne "Done" par récence (Recency First)
 
 Actuellement, l'ordre des tâches dans la colonne **Done** (ou toute colonne marquée comme terminée) suit la même logique que les colonnes actives : l'ordinal prime. Cela peut être frustrant car une tâche terminée récemment peut se retrouver noyée en bas de colonne si elle avait un ordinal élevé.

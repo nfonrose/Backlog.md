@@ -36,6 +36,8 @@ export interface InitializeProjectOptions {
 		definitionOfDone?: string[];
 		defaultPort?: number;
 		autoOpenBrowser?: boolean;
+		sortDoneByRecency?: boolean;
+		centralizedTasksOrdinals?: boolean;
 		/** Custom task prefix (e.g., "JIRA"). Only set during first init, read-only after. */
 		taskPrefix?: string;
 	};
@@ -113,6 +115,9 @@ export async function initializeProject(
 		activeBranchDays: advancedConfig.activeBranchDays ?? existingConfig?.activeBranchDays ?? d.activeBranchDays,
 		defaultPort: advancedConfig.defaultPort ?? existingConfig?.defaultPort ?? d.defaultPort,
 		autoOpenBrowser: advancedConfig.autoOpenBrowser ?? existingConfig?.autoOpenBrowser ?? d.autoOpenBrowser,
+		sortDoneByRecency: advancedConfig.sortDoneByRecency ?? existingConfig?.sortDoneByRecency ?? false,
+		centralizedTasksOrdinals:
+			advancedConfig.centralizedTasksOrdinals ?? existingConfig?.centralizedTasksOrdinals ?? false,
 		taskResolutionStrategy: existingConfig?.taskResolutionStrategy || "most_recent",
 		// Preserve existing prefixes on re-init, or use custom prefix if provided during first init
 		prefixes: existingConfig?.prefixes || {
@@ -131,6 +136,9 @@ export async function initializeProject(
 		activeBranchDays: advancedConfig.activeBranchDays ?? existingConfig?.activeBranchDays ?? d.activeBranchDays,
 		defaultPort: advancedConfig.defaultPort ?? existingConfig?.defaultPort ?? d.defaultPort,
 		autoOpenBrowser: advancedConfig.autoOpenBrowser ?? existingConfig?.autoOpenBrowser ?? d.autoOpenBrowser,
+		sortDoneByRecency: advancedConfig.sortDoneByRecency ?? existingConfig?.sortDoneByRecency ?? false,
+		centralizedTasksOrdinals:
+			advancedConfig.centralizedTasksOrdinals ?? existingConfig?.centralizedTasksOrdinals ?? false,
 		prefixes: existingConfig?.prefixes || {
 			task: advancedConfig.taskPrefix || "task",
 		},
@@ -161,6 +169,7 @@ export async function initializeProject(
 	// Create structure and save config
 	if (isReInitialization) {
 		await core.filesystem.saveConfig(config);
+		await core.filesystem.migrateOrdinalsToCentralStorage();
 	} else {
 		const normalizedBacklogDirectory = normalizeProjectBacklogDirectory(options.backlogDirectory);
 		const inferredBacklogDirectorySource = normalizedBacklogDirectory
@@ -197,6 +206,7 @@ export async function initializeProject(
 		core.filesystem.setConfigLocation(effectiveConfigLocation);
 		await core.filesystem.ensureBacklogStructure();
 		await core.filesystem.saveConfig(config);
+		await core.filesystem.migrateOrdinalsToCentralStorage();
 		await core.ensureConfigLoaded();
 	}
 
