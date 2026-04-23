@@ -1,0 +1,1065 @@
+teevity@lima-prt-dev-backlogmd-limavm:/Users/teevity/Dev/misc/4.backlogMD/Backlog.md$ bun test
+bun test v1.2.23 (cf136713)
+
+src/test/reorder-utils.test.ts:
+✓ calculateNewOrdinal > returns default step when no neighbors exist [35.00ms]
+✓ calculateNewOrdinal > averages ordinals when both neighbors exist [32.00ms]
+✓ calculateNewOrdinal > flags rebalance when there is no gap between neighbors [31.00ms]
+✓ calculateNewOrdinal > appends step when dropping after the last task [31.00ms]
+✓ resolveOrdinalConflicts > returns empty array when ordinals are already increasing [29.00ms]
+✓ resolveOrdinalConflicts > reassigns duplicate or descending ordinals [32.00ms]
+✓ resolveOrdinalConflicts > fills in missing ordinals with default spacing [32.00ms]
+✓ resolveOrdinalConflicts > can force sequential reassignment when requested [37.00ms]
+✓ Core.reorderTask > reorders within a column without touching unaffected tasks [71.00ms]
+✓ Core.reorderTask > rebalances ordinals when collisions exist [61.00ms]
+✓ Core.reorderTask > updates status and ordinal when moving across columns [53.00ms]
+✓ Core.reorderTask > reorders tasks with legacy lowercase IDs [47.00ms]
+
+src/test/cli-final-summary.test.ts:
+✓ Final Summary CLI > supports --final-summary on task create [457.00ms]
+✓ Final Summary CLI > supports set/append/clear flags on task edit [955.00ms]
+✓ Final Summary CLI > renders Final Summary in plain output after Implementation Notes when present [342.00ms]
+
+src/test/mcp-server.test.ts:
+✓ McpServer bootstrap > exposes core capabilities before registration [38.00ms]
+✓ McpServer bootstrap > workflow overview resource returns correct content [34.00ms]
+✓ McpServer bootstrap > task creation guide resource returns correct content [34.00ms]
+✓ McpServer bootstrap > task execution guide resource returns correct content [32.00ms]
+✓ McpServer bootstrap > task finalization guide resource returns correct content [35.00ms]
+✓ McpServer bootstrap > workflow tool returns overview by default and selected guide content when requested [34.00ms]
+✓ McpServer bootstrap > registers task tools via helpers [35.00ms]
+✓ McpServer bootstrap > createMcpServer wires stdio-ready instance [35.00ms]
+
+src/test/task-path.test.ts:
+✓ Task path utilities > normalizeTaskId > should add uppercase TASK- prefix if missing [34.00ms]
+✓ Task path utilities > normalizeTaskId > should normalize existing prefix to uppercase [70.00ms]
+✓ Task path utilities > normalizeTaskId > should preserve non-default prefixes when present [38.00ms]
+✓ Task path utilities > normalizeTaskId > should handle empty strings [36.00ms]
+✓ Task path utilities > normalizeTaskId > should normalize mixed-case prefixes to uppercase [35.00ms]
+✓ Task path utilities > normalizeTaskId > should work with custom prefixes (uppercase output) [35.00ms]
+✓ Task path utilities > normalizeTaskId > should work with draft prefix (uppercase output) [35.00ms]
+✓ Task path utilities > taskIdsEqual > should compare IDs case-insensitively [40.00ms]
+✓ Task path utilities > taskIdsEqual > should handle numeric comparison (leading zeros) [35.00ms]
+✓ Task path utilities > taskIdsEqual > should compare subtask IDs correctly [35.00ms]
+✓ Task path utilities > taskIdsEqual > should work with custom prefixes [34.00ms]
+✓ Task path utilities > taskIdsEqual > should return false for different IDs [35.00ms]
+✓ Task path utilities > taskIdsEqual > should NOT match IDs with non-numeric suffixes (prevent parseInt coercion) [35.00ms]
+✓ Task path utilities > getTaskPath > should return full path for existing task [34.00ms]
+✓ Task path utilities > getTaskPath > should NOT match when input has non-numeric characters (e.g., typos) [37.00ms]
+✓ Task path utilities > getTaskPath > should work with task- prefix [36.00ms]
+✓ Task path utilities > getTaskPath > should resolve zero-padded numeric IDs to the same task [39.00ms]
+✓ Task path utilities > getTaskPath > should resolve case-insensitive task IDs [42.00ms]
+✓ Task path utilities > getTaskPath > should return null for non-existent task [36.00ms]
+✓ Task path utilities > getTaskPath > should handle errors gracefully [39.00ms]
+✓ Task path utilities > getTaskFilename > should return filename for existing task [37.00ms]
+✓ Task path utilities > getTaskFilename > should resolve dotted IDs ignoring leading zeros in segments [35.00ms]
+✓ Task path utilities > getTaskFilename > should resolve case-insensitive IDs when fetching filenames [38.00ms]
+✓ Task path utilities > getTaskFilename > should return null for non-existent task [37.00ms]
+✓ Task path utilities > taskFileExists > should return true for existing tasks [35.00ms]
+✓ Task path utilities > taskFileExists > should return false for non-existent tasks [39.00ms]
+✓ Task path utilities > taskFileExists > should work with task- prefix [35.00ms]
+✓ Task path utilities > integration with Core default > should work without explicit core parameter when in valid project [33.00ms]
+✓ Task path utilities > numeric ID lookup with custom prefix > should find task by numeric ID when file has custom prefix [35.00ms]
+✓ Task path utilities > numeric ID lookup with custom prefix > should find subtask by dotted numeric ID with custom prefix [38.00ms]
+✓ Task path utilities > numeric ID lookup with custom prefix > should NOT match numeric ID with typo even when custom prefix exists [36.00ms]
+✓ Task path utilities > numeric ID lookup with custom prefix > should find task when using full prefixed ID [34.00ms]
+✓ Task path utilities > numeric ID lookup with custom prefix > should be case-insensitive for prefixed lookups [40.00ms]
+✓ Task path utilities > getTaskFilename with non-numeric input > should NOT match filenames when input has non-numeric characters [38.00ms]
+
+src/test/board-loading.test.ts:
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should load tasks with default configuration [110.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should skip cross-branch checking when checkActiveBranches is false [102.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should perform cross-branch checking when checkActiveBranches is true [90.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should respect activeBranchDays configuration [149.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should handle cancellation via AbortSignal [78.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should handle empty task list gracefully [88.00ms]
+✓ Board Loading with checkActiveBranches > Core.loadTasks() > should pass progress callbacks correctly [92.00ms]
+✓ Board Loading with checkActiveBranches > Config integration > should use default values when config properties are undefined [45.00ms]
+✓ Board Loading with checkActiveBranches > Config integration > should handle config with checkActiveBranches explicitly set to false [45.00ms]
+
+src/test/config-commands.test.ts:
+✓ Config commands > configureAdvancedSettings keeps defaults when no changes requested [82.00ms]
+✓ Config commands > configureAdvancedSettings applies wizard selections [32.00ms]
+✓ Config commands > configureAdvancedSettings supports add/remove/reorder/clear actions for Definition of Done defaults [30.00ms]
+✓ Config commands > exposes config list/get/set subcommands [893.00ms]
+✓ Config commands > surfaces milestones in config get/list from milestone files [635.00ms]
+✓ Config commands > should save and load defaultEditor config [36.00ms]
+✓ Config commands > should handle config with and without defaultEditor [37.00ms]
+✓ Config commands > should preserve other config values when setting defaultEditor [33.00ms]
+
+src/test/no-remote-preflight.test.ts:
+✓ Missing git remote preflight > GitOperations.fetch() silently skips when no remotes exist [13.00ms]
+✓ Missing git remote preflight > loadRemoteTasks() handles no-remote repos without throwing [12.00ms]
+✓ Missing git remote preflight > CLI init with includeRemote=true in no-remote repo shows a final warning [343.00ms]
+
+src/test/implementation-notes-append.test.ts:
+✓ Implementation Notes - append > appends to existing Implementation Notes with single blank line [327.00ms]
+✓ Implementation Notes - append > creates Implementation Notes at correct position when missing (after plan, else AC, else Description) [348.00ms]
+✓ Implementation Notes - append > supports multiple --append-notes flags in order [345.00ms]
+✓ Implementation Notes - append > edit --append-notes works and allows combining with --notes [995.00ms]
+
+src/test/description-newlines.test.ts:
+✓ CLI description newline handling > should preserve literal newlines when creating task [346.00ms]
+✓ CLI description newline handling > should preserve literal newlines when editing task [351.00ms]
+✓ CLI description newline handling > should not interpret \n sequences as newlines [343.00ms]
+
+src/test/packaging-bin.test.ts:
+✓ package bin wrapper > points to scripts/cli.cjs to own .bin/backlog [1.00ms]
+
+src/test/mcp-drafts.test.ts:
+✓ MCP draft support via task tools > creates, lists, and views drafts while excluding them by default [55.00ms]
+✓ MCP draft support via task tools > promotes and demotes via task_edit status changes [72.00ms]
+✓ MCP draft support via task tools > searches and archives drafts when requested [45.00ms]
+
+src/test/mcp-task-complete.test.ts:
+✓ MCP task_complete > moves Done tasks to the completed folder [56.00ms]
+✓ MCP task_complete > refuses to complete tasks that are not Done [52.00ms]
+
+src/test/parent-id-normalization.test.ts:
+✓ CLI parent task id normalization > should normalize parent task id when creating subtasks [437.00ms]
+
+src/test/cli-parent-filter.test.ts:
+✓ CLI parent task filtering > should filter tasks by parent with full task ID [401.00ms]
+✓ CLI parent task filtering > should filter tasks by parent with short task ID [350.00ms]
+✓ CLI parent task filtering > should show error for non-existent parent task [359.00ms]
+✓ CLI parent task filtering > should show message when parent has no children [359.00ms]
+✓ CLI parent task filtering > should work with -p shorthand flag [361.00ms]
+✓ CLI parent task filtering > should combine parent filter with status filter [388.00ms]
+
+src/test/web-milestones-page-unassigned-filter.test.tsx:
+✓ MilestonesPage unassigned filtering > hides done unassigned tasks and counts only non-done unassigned tasks [10.00ms]
+✓ MilestonesPage unassigned filtering > shows an empty state when all unassigned tasks are done [1.00ms]
+✓ MilestonesPage unassigned filtering > keeps milestone-assigned groups rendering with existing behavior [1.00ms]
+
+src/test/mcp-tasks.test.ts:
+✓ MCP task tools (MVP) > creates and lists tasks [67.00ms]
+✓ MCP task tools (MVP) > filters task_list by milestone using closest matching and combines with status [110.00ms]
+✓ MCP task tools (MVP) > applies milestone filtering in task_list draft status path [45.00ms]
+✓ MCP task tools (MVP) > includes completed tasks in task_search results and excludes archived tasks [123.00ms]
+✓ MCP task tools (MVP) > exposes status enums and defaults from configuration [39.00ms]
+✓ MCP task tools (MVP) > describes Definition of Done fields as task-level in schemas [30.00ms]
+✓ MCP task tools (MVP) > exposes ordinal in task schemas [33.00ms]
+✓ MCP task tools (MVP) > allows case-insensitive and whitespace-normalized status values [56.00ms]
+✓ MCP task tools (MVP) > edits tasks including plan, notes, dependencies, and acceptance criteria [79.00ms]
+✓ MCP task tools (MVP) > creates, edits, lists, and views tasks with ordinal [99.00ms]
+✓ MCP task tools (MVP) > applies task_list limit after ordinal-aware sorting [69.00ms]
+✓ MCP task tools (MVP) > rejects invalid ordinal input [49.00ms]
+✓ MCP task tools (MVP) > creates and edits Definition of Done items [75.00ms]
+✓ MCP task tools (MVP) > includes subtask list in task_view output and hides it when empty [90.00ms]
+
+src/test/sequences-insert-between.test.ts:
+✓ adjustDependenciesForInsertBetween > creates new sequence between K and K+1 with dependency updates
+✓ adjustDependenciesForInsertBetween > supports top insertion (K=0): moved becomes Sequence 1; next sequence tasks depend on moved [1.00ms]
+✓ adjustDependenciesForInsertBetween > when there are no sequences, top insertion anchors moved via ordinal
+
+src/test/cli-board-integration.test.ts:
+✓ CLI Board Integration > should handle board command logic without crashing [143.00ms]
+✓ CLI Board Integration > should properly handle cross-branch task resolution [152.00ms]
+✓ CLI Board Integration > should create ViewSwitcher with kanban view successfully [142.00ms]
+
+src/test/cli-agents.test.ts:
+✓ CLI agents command > should show help when no options are provided [374.00ms]
+✓ CLI agents command > should show help text with agents --help [358.00ms]
+✓ CLI agents command > should update selected agent instruction files [37.00ms]
+✓ CLI agents command > should handle user cancellation gracefully [36.00ms]
+✓ CLI agents command > should fail when not in a backlog project [337.00ms]
+✓ CLI agents command > should update multiple selected files [34.00ms]
+✓ CLI agents command > should update existing files correctly [38.00ms]
+
+src/test/cli-splash.test.ts:
+✓ CLI Splash (bare run) > prints minimal splash in non-initialized repo (non-TTY) [281.00ms]
+✓ CLI Splash (bare run) > prints quickstart (initialized repo) [293.00ms]
+✓ CLI Splash (bare run) > --help shows commander help, not splash [274.00ms]
+✓ CLI Splash (bare run) > --plain forces minimal splash [272.00ms]
+
+src/test/mermaid.test.ts:
+✓ renderMermaidIn > uses run API when available [638.00ms]
+✓ renderMermaidIn > falls back to render API when run is not available [6.00ms]
+mermaid: no compatible render method found, leaving raw code block
+✓ renderMermaidIn > does not throw when mermaid is missing [314.00ms]
+
+src/test/mcp-roots-discovery.test.ts:
+✓ MCP roots discovery > createMcpServer enables roots discovery in fallback mode [36.00ms]
+✓ MCP roots discovery > reinitializeProjectRoot switches Core to a different project [37.00ms]
+✓ MCP roots discovery > readiness gate blocks handlers until resolved [52.00ms]
+✓ MCP roots discovery > enableRootsDiscovery sets up oninitialized callback [53.00ms]
+✓ MCP roots discovery > normal mode has no roots discovery and no readiness delay [43.00ms]
+
+src/test/sequences.test.ts:
+✓ computeSequences (with Unsequenced) > puts isolated tasks into Unsequenced bucket
+✓ computeSequences (with Unsequenced) > handles a simple chain A -> B -> C
+✓ computeSequences (with Unsequenced) > groups parallel branches (A -> C, B -> C) into same sequence [1.00ms]
+✓ computeSequences (with Unsequenced) > handles a more complex graph
+✓ computeSequences (with Unsequenced) > ignores external dependencies not present in the task set
+
+src/test/claude-agent-install.test.ts:
+✓ installClaudeAgent > creates .claude/agents directory in project root if it doesn't exist [3.00ms]
+✓ installClaudeAgent > writes the project-manager-backlog.md file with correct content [3.00ms]
+✓ installClaudeAgent > overwrites existing agent file [6.00ms]
+✓ installClaudeAgent > works with different project paths [3.00ms]
+
+src/test/final-summary.test.ts:
+✓ Final Summary > creates tasks with Final Summary and persists section markers [51.00ms]
+✓ Final Summary > sets, appends, and clears Final Summary via task edit operations [55.00ms]
+✓ Final Summary > orders Final Summary after Implementation Notes [37.00ms]
+✓ Final Summary > does not persist empty Final Summary sections [48.00ms]
+✓ Final Summary > ignores Final Summary examples nested inside Description [36.00ms]
+
+src/test/unicode-rendering.test.ts:
+✓ Unicode rendering > Chinese characters display without replacement [25.00ms]
+
+src/test/draft-create-consistency.test.ts:
+✓ Draft creation consistency > keeps IDs and filenames consistent between draft create and task create --draft [659.00ms]
+✓ Draft creation consistency > uses DRAFT IDs in plain output for task create --draft [405.00ms]
+
+src/test/prefix-config.test.ts:
+✓ prefix-config > getDefaultPrefixConfig > returns default task prefix
+✓ prefix-config > getDefaultPrefixConfig > returns a new object each time
+✓ prefix-config > mergePrefixConfig > returns defaults when no config provided
+✓ prefix-config > mergePrefixConfig > returns defaults when empty object provided
+✓ prefix-config > mergePrefixConfig > merges partial config with defaults
+✓ prefix-config > mergePrefixConfig > uses custom task value when provided
+✓ prefix-config > normalizeId > adds uppercase prefix to numeric ID
+✓ prefix-config > normalizeId > normalizes existing prefix to uppercase
+✓ prefix-config > normalizeId > normalizes mixed case to uppercase
+✓ prefix-config > normalizeId > works with custom prefixes (uppercase output)
+✓ prefix-config > normalizeId > handles hierarchical IDs
+✓ prefix-config > normalizeId > trims whitespace
+✓ prefix-config > extractIdBody > extracts body from prefixed ID
+✓ prefix-config > extractIdBody > handles hierarchical IDs
+✓ prefix-config > extractIdBody > returns original if no prefix match
+✓ prefix-config > extractIdBody > is case-insensitive for prefix [1.00ms]
+✓ prefix-config > extractIdBody > works with custom prefixes
+✓ prefix-config > extractIdNumbers > extracts single number
+✓ prefix-config > extractIdNumbers > extracts hierarchical numbers
+✓ prefix-config > extractIdNumbers > handles non-numeric body
+✓ prefix-config > extractIdNumbers > handles mixed numeric/non-numeric
+✓ prefix-config > extractIdNumbers > works with custom prefixes
+✓ prefix-config > buildGlobPattern > builds correct glob pattern
+✓ prefix-config > buildIdRegex > matches simple IDs
+✓ prefix-config > buildIdRegex > matches hierarchical IDs
+✓ prefix-config > buildIdRegex > is case-insensitive
+✓ prefix-config > buildIdRegex > does not match wrong prefix
+✓ prefix-config > buildIdRegex > works with custom prefixes
+✓ prefix-config > buildIdRegex > only matches at start of string
+✓ prefix-config > buildFilenameIdRegex > extracts ID from filename
+✓ prefix-config > buildFilenameIdRegex > handles hierarchical IDs in filenames
+✓ prefix-config > hasPrefix > returns true for matching prefix
+✓ prefix-config > hasPrefix > is case-insensitive
+✓ prefix-config > hasPrefix > returns false for non-matching prefix
+✓ prefix-config > hasPrefix > trims whitespace
+✓ prefix-config > idsEqual > returns true for identical IDs
+✓ prefix-config > idsEqual > is case-insensitive for prefix
+✓ prefix-config > idsEqual > returns false for different IDs
+✓ prefix-config > idsEqual > handles IDs without prefix
+✓ prefix-config > generateNextId > generates next ID in sequence (uppercase)
+✓ prefix-config > generateNextId > handles gaps in sequence
+✓ prefix-config > generateNextId > returns TASK-1 for empty list
+✓ prefix-config > generateNextId > ignores subtasks when finding max
+✓ prefix-config > generateNextId > handles zero padding
+✓ prefix-config > generateNextId > works with custom prefixes (uppercase)
+✓ prefix-config > generateNextId > ignores IDs with wrong prefix
+✓ prefix-config > generateNextSubtaskId > generates next subtask ID (uppercase) [1.00ms]
+✓ prefix-config > generateNextSubtaskId > returns .1 for first subtask
+✓ prefix-config > generateNextSubtaskId > handles gaps in subtask sequence
+✓ prefix-config > generateNextSubtaskId > handles zero padding
+✓ prefix-config > generateNextSubtaskId > works with custom prefixes
+✓ prefix-config > generateNextSubtaskId > handles unnormalized parent ID
+✓ prefix-config > getPrefixForType > returns default task prefix without config
+✓ prefix-config > getPrefixForType > returns configured task prefix
+✓ prefix-config > getPrefixForType > returns default task prefix when config has no prefixes
+✓ prefix-config > getPrefixForType > returns hardcoded draft prefix (not configurable)
+✓ prefix-config > getPrefixForType > draft prefix is always hardcoded regardless of config
+✓ prefix-config > getPrefixForType > returns doc prefix for Document type
+✓ prefix-config > getPrefixForType > returns decision prefix for Decision type
+✓ prefix-config > extractAnyPrefix > extracts task prefix
+✓ prefix-config > extractAnyPrefix > extracts uppercase prefix
+✓ prefix-config > extractAnyPrefix > extracts custom prefix
+✓ prefix-config > extractAnyPrefix > extracts draft prefix
+✓ prefix-config > extractAnyPrefix > returns null for plain number
+✓ prefix-config > extractAnyPrefix > returns null for empty string
+✓ prefix-config > extractAnyPrefix > returns null for null/undefined
+✓ prefix-config > extractAnyPrefix > handles subtask IDs
+✓ prefix-config > extractAnyPrefix > handles word IDs
+
+src/test/board.test.ts:
+✓ exportKanbanBoardToFile > creates file and overwrites board content [3.00ms]
+✓ exportKanbanBoardToFile > sorts all columns by updatedDate descending, then by ID [1.00ms]
+✓ exportKanbanBoardToFile > formats tasks with new styling rules
+✓ exportKanbanBoardToFile > handles assignees with existing @ symbols correctly [1.00ms]
+✓ buildKanbanStatusGroups > returns configured statuses even when there are no tasks
+✓ buildKanbanStatusGroups > appends unknown statuses from tasks after configured ones
+✓ generateMilestoneGroupedBoard > groups milestone ID and title aliases into one section using file title
+✓ generateMilestoneGroupedBoard > keeps ambiguous reused milestone titles as separate sections [1.00ms]
+
+src/test/sequences-move.test.ts:
+✓ adjustDependenciesForMove (join semantics) > sets moved task deps to previous sequence tasks and does not modify next sequence [1.00ms]
+✓ adjustDependenciesForMove (join semantics) > keeps deps and does not add duplicates to next sequence
+
+src/test/board-ui.test.ts:
+✓ Board TUI Logic > shouldRebuildColumns > should return true if column counts differ
+✓ Board TUI Logic > shouldRebuildColumns > should return true if statuses differ
+✓ Board TUI Logic > shouldRebuildColumns > should return true if task counts differ
+✓ Board TUI Logic > shouldRebuildColumns > should return true if task IDs differ (order change)
+✓ Board TUI Logic > shouldRebuildColumns > should return false if columns and tasks are identical
+
+src/test/auto-commit.test.ts:
+✓ Auto-commit configuration > Config migration > should include autoCommit in default config with false value [74.00ms]
+✓ Auto-commit configuration > Config migration > should migrate existing config to include autoCommit [71.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit disabled > should not auto-commit when creating task with autoCommit disabled in config [86.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit disabled > should auto-commit when explicitly passing true to createTask [143.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit disabled > should not auto-commit when updating task with autoCommit disabled in config [144.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit disabled > should not auto-commit when archiving task with autoCommit disabled in config [144.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit enabled > should auto-commit when creating task with autoCommit enabled in config [172.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit enabled > should not auto-commit when explicitly passing false to createTask [106.00ms]
+✓ Auto-commit configuration > Core operations with autoCommit enabled > should auto-commit archive cleanup updates when archiving a task [279.00ms]
+✓ Auto-commit configuration > Draft operations > should respect autoCommit config for draft operations [91.00ms]
+✓ Auto-commit configuration > Draft operations > should respect autoCommit config for promote draft operations [153.00ms]
+
+src/test/mcp-refs-docs.test.ts:
+✓ MCP task references and documentation > task_create with references > creates task with references [52.00ms]
+✓ MCP task references and documentation > task_create with references > creates task without references [45.00ms]
+✓ MCP task references and documentation > task_create with documentation > creates task with documentation [47.00ms]
+✓ MCP task references and documentation > task_create with documentation > creates task without documentation [48.00ms]
+✓ MCP task references and documentation > task_create with both references and documentation > creates task with both fields [48.00ms]
+✓ MCP task references and documentation > task_edit with references > sets references on existing task [82.00ms]
+✓ MCP task references and documentation > task_edit with references > adds references to existing task [57.00ms]
+✓ MCP task references and documentation > task_edit with references > removes references from existing task [54.00ms]
+✓ MCP task references and documentation > task_edit with documentation > sets documentation on existing task [51.00ms]
+✓ MCP task references and documentation > task_edit with documentation > adds documentation to existing task [53.00ms]
+✓ MCP task references and documentation > task_edit with documentation > removes documentation from existing task [53.00ms]
+✓ MCP task references and documentation > persistence verification > persists references and documentation in task [64.00ms]
+
+src/test/task-wizard.test.ts:
+✓ task wizard > builds create input from shared wizard fields [2.00ms]
+✓ task wizard > builds prefilled edit update input
+✓ task wizard > supports edit picker flow
+✓ task wizard > returns null when wizard is cancelled [1.00ms]
+✓ task wizard > supports back navigation from step N to N-1 for text prompts
+✓ task wizard > treats first-step backspace-empty navigation signal as a no-op
+✓ task wizard > uses prompt-level validation for required title and keeps default selected status
+✓ task wizard > uses select prompts for status and priority with create defaults [1.00ms]
+✓ task wizard > falls back to default statuses and keeps create default on To Do
+✓ task wizard > labels task DoD and single-line text limitations clearly
+
+src/test/checklist.test.ts:
+✓ Checklist utilities > CHECKBOX_PATTERNS > should match checked checkbox lines [1.00ms]
+✓ Checklist utilities > CHECKBOX_PATTERNS > should match unchecked checkbox lines
+✓ Checklist utilities > CHECKBOX_PATTERNS > should not match non-checkbox lines
+✓ Checklist utilities > CHECKBOX_PATTERNS > should match checkbox prefix pattern
+✓ Checklist utilities > parseCheckboxLine > should parse checked checkbox lines
+✓ Checklist utilities > parseCheckboxLine > should parse unchecked checkbox lines
+✓ Checklist utilities > parseCheckboxLine > should handle indented checkboxes
+✓ Checklist utilities > parseCheckboxLine > should handle extra whitespace
+✓ Checklist utilities > parseCheckboxLine > should return null for non-checkbox lines
+✓ Checklist utilities > formatChecklistItem > should format checked item with default options
+✓ Checklist utilities > formatChecklistItem > should format unchecked item with default options
+✓ Checklist utilities > formatChecklistItem > should use custom symbols
+✓ Checklist utilities > formatChecklistItem > should use custom padding
+✓ Checklist utilities > parseCheckboxLines > should parse multiple checkbox lines
+✓ Checklist utilities > parseCheckboxLines > should ignore non-checkbox lines
+✓ Checklist utilities > formatChecklist > should format multiple items consistently
+✓ Checklist utilities > alignAcceptanceCriteria > should align checkbox items consistently
+✓ Checklist utilities > alignAcceptanceCriteria > should handle mixed content with consistent padding
+✓ Checklist utilities > alignAcceptanceCriteria > should handle empty or whitespace-only lines
+✓ Checklist utilities > extractAndFormatAcceptanceCriteria > should extract and format acceptance criteria from markdown
+✓ Checklist utilities > extractAndFormatAcceptanceCriteria > should return empty array when no acceptance criteria section exists
+✓ Checklist utilities > extractAndFormatAcceptanceCriteria > should handle case-insensitive section headers
+✓ Checklist utilities > alignment consistency > all formatted items should start at the same column
+
+src/test/documentation.test.ts:
+✓ Task Documentation > Create task with documentation > should create a task with documentation [47.00ms]
+✓ Task Documentation > Create task with documentation > should create a task without documentation [44.00ms]
+✓ Task Documentation > Create task with documentation > should handle empty documentation array [67.00ms]
+✓ Task Documentation > Update task documentation > should set documentation on existing task [83.00ms]
+✓ Task Documentation > Update task documentation > should add documentation to existing task [61.00ms]
+✓ Task Documentation > Update task documentation > should not add duplicate documentation [59.00ms]
+✓ Task Documentation > Update task documentation > should remove documentation from existing task [51.00ms]
+✓ Task Documentation > Update task documentation > should replace documentation when setting directly [50.00ms]
+✓ Task Documentation > Documentation in markdown > should persist documentation in markdown frontmatter [47.00ms]
+✓ Task Documentation > Documentation in markdown > should not include empty documentation in frontmatter [63.00ms]
+
+src/test/server-assets.test.ts:
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Assets
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer asset serving > serves existing image assets with appropriate Content-Type and body [491.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Assets
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer asset serving > serves text files with text/plain Content-Type [440.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Assets
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer asset serving > returns 404 for missing files [460.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Assets
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer asset serving > rejects path traversal attempts with 404 [439.00ms]
+
+src/test/milestone-filter.test.ts:
+✓ milestone filter matching > normalizes punctuation and case
+✓ milestone filter matching > returns exact normalized milestone when available
+✓ milestone filter matching > returns closest milestone for typo input
+✓ milestone filter matching > returns closest milestone for partial input
+✓ milestone filter matching > resolves milestone IDs to titles for filtering
+
+src/test/sequences-reorder.test.ts:
+✓ reorderWithinSequence > reassigns ordinals within a sequence and leaves others untouched
+✓ reorderWithinSequence > clamps index and preserves dependencies
+
+src/test/cli-commit-behaviour.test.ts:
+✓ CLI Auto-Commit Behavior with autoCommit: false > should not commit when creating a task if autoCommit is false [428.00ms]
+✓ CLI Auto-Commit Behavior with autoCommit: false > should not commit when creating a document if autoCommit is false [430.00ms]
+✓ CLI Auto-Commit Behavior with autoCommit: false > should not commit when creating a decision if autoCommit is false [507.00ms]
+✓ CLI Auto-Commit Behavior with autoCommit: true > should commit when creating a task if autoCommit is true [531.00ms]
+✓ CLI Auto-Commit Behavior with autoCommit: true > should commit when creating a document if autoCommit is true [515.00ms]
+✓ CLI Auto-Commit Behavior with autoCommit: true > should commit when creating a decision if autoCommit is true [540.00ms]
+
+src/test/acceptance-criteria-structured.test.ts:
+✓ Structured Acceptance Criteria parsing > parses acceptance criteria items with checked state and index [1.00ms]
+
+src/test/tui-documentation.test.ts:
+✓ TUI documentation display > shows documentation entries in task popup content [10.00ms]
+
+src/test/acceptance-criteria-manager.test.ts:
+✓ AcceptanceCriteriaManager > does not insert blank lines when adding new criteria (BACK-365)
+✓ AcceptanceCriteriaManager > removes a single criterion without affecting other sections [1.00ms]
+✓ AcceptanceCriteriaManager > toggles a criterion and persists state
+
+src/test/core.test.ts:
+✓ Core > initialization > should have filesystem and git operations available [34.00ms]
+✓ Core > initialization > should initialize project with default config [86.00ms]
+✓ Core > initialization > should use root backlog.config.yml for custom backlog directories [47.00ms]
+✓ Core > task operations > should create task without auto-commit [142.00ms]
+✓ Core > task operations > should create task with auto-commit [153.00ms]
+✓ Core > task operations > should update task with auto-commit [200.00ms]
+✓ Core > task operations > should archive task with auto-commit [172.00ms]
+✓ Core > task operations > should demote task with auto-commit [177.00ms]
+✓ Core > task operations > should resolve tasks using flexible ID formats [86.00ms]
+✓ Core > task operations > should resolve numeric-only IDs with custom prefix (BACK-364) [86.00ms]
+✓ Core > task operations > should NOT match numeric ID with typos when using custom prefix (BACK-364) [78.00ms]
+✓ Core > task operations > should return false when archiving non-existent task [82.00ms]
+✓ Core > task operations > should apply default status when task has empty status [72.00ms]
+✓ Core > task operations > should not override existing status [77.00ms]
+✓ Core > task operations > should preserve description text when saving without header markers [79.00ms]
+✓ Core > task operations > should not duplicate description header in saved content [69.00ms]
+✓ Core > task operations > should handle task creation without auto-commit when git fails [74.00ms]
+✓ Core > task operations > should normalize assignee for string and array inputs [81.00ms]
+✓ Core > task operations > should normalize assignee when updating tasks [80.00ms]
+✓ Core > task operations > should create sub-tasks with proper hierarchical IDs [156.00ms]
+✓ Core > document operations > updates a document title without leaving the previous file behind [40.00ms]
+✓ Core > document operations > shows a git rename when the document title changes [94.00ms]
+✓ Core > draft operations > should create draft without auto-commit [85.00ms]
+✓ Core > draft operations > should create draft with auto-commit [167.00ms]
+✓ Core > draft operations > should promote draft with auto-commit [157.00ms]
+✓ Core > draft operations > should archive draft with auto-commit [146.00ms]
+✓ Core > draft operations > should preserve draft metadata through the canonical create path [74.00ms]
+✓ Core > integration with config > should use custom default status from config [41.00ms]
+✓ Core > integration with config > should fall back to To Do when config has no default status [40.00ms]
+✓ Core > directory accessor integration > should use FileSystem directory accessors for git operations [41.00ms]
+
+src/test/tui-edit-session.test.ts:
+Failed to open editor: Error: Executable not found in $PATH: "node"
+91 |            const noopScript = await createEditorScript("noop-editor.js", "process.exit(0);\n");
+92 |            await setEditor(`node ${noopScript}`);
+93 |
+94 |            const result = await core.editTaskInTui(taskId, screen);
+95 |            expect(result.changed).toBe(false);
+96 |            expect(result.reason).toBeUndefined();
+                             ^
+error: expect(received).toBeUndefined()
+
+Received: "editor_failed"
+
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/tui-edit-session.test.ts:96:25)
+✗ Core.editTaskInTui > returns unchanged result when editor makes no file modifications [493.00ms]
+Failed to open editor: Error: Executable not found in $PATH: "node"
+111 | `,
+112 |           );
+113 |           await setEditor(`node ${editScript}`);
+114 |
+115 |           const result = await core.editTaskInTui(taskId, screen);
+116 |           expect(result.changed).toBe(true);
+                               ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/tui-edit-session.test.ts:116:26)
+✗ Core.editTaskInTui > updates updated_date when editor changes task content [481.00ms]
+Failed to open editor: Error: Executable not found in $PATH: "node"
+✓ Core.editTaskInTui > returns editor_failed without mutating metadata when editor exits non-zero [491.00ms]
+
+src/test/cli-init-claude-default.test.ts:
+✓ init Claude agent default > does not install Claude agent by default in non-interactive mode [354.00ms]
+✓ init Claude agent default > installs Claude agent when flag is true [367.00ms]
+
+src/test/markdown.test.ts:
+✓ Markdown Parser > parseMarkdown > should parse frontmatter and content
+✓ Markdown Parser > parseMarkdown > should handle content without frontmatter
+✓ Markdown Parser > parseMarkdown > should handle empty content
+✓ Markdown Parser > parseTask > should parse a complete task [1.00ms]
+✓ Markdown Parser > parseTask > should parse a task with minimal fields
+✓ Markdown Parser > parseTask > should handle task with empty status
+✓ Markdown Parser > parseTask > should parse unquoted created_date [1.00ms]
+✓ Markdown Parser > parseTask > should parse created_date in short format
+✓ Markdown Parser > parseTask > should preserve frontmatter when title contains dollar-sign digit sequences
+✓ Markdown Parser > parseTask > should extract acceptance criteria with checked items
+✓ Markdown Parser > parseTask > should parse unquoted assignee names starting with @ [1.00ms]
+✓ Markdown Parser > parseTask > should parse unquoted reporter names starting with @
+✓ Markdown Parser > parseTask > should parse inline assignee lists with unquoted @ handles
+✓ Markdown Parser > parseTask > should escape backslashes in inline @ lists
+✓ Markdown Parser > parseDecision > should parse a decision log
+✓ Markdown Parser > parseDecision > should parse decision log with alternatives
+✓ Markdown Parser > parseDecision > should handle missing sections
+✓ Markdown Parser > parseDocument > should parse a document
+✓ Markdown Serializer > serializeTask > should serialize a task correctly
+✓ Markdown Serializer > serializeTask > should serialize task with subtasks [1.00ms]
+✓ Markdown Serializer > serializeTask > should serialize task with parent
+✓ Markdown Serializer > serializeTask > should serialize minimal task
+✓ Markdown Serializer > serializeTask > removes acceptance criteria section when list becomes empty
+✓ Markdown Serializer > serializeTask > serializes acceptance criteria when structured items exist [1.00ms]
+✓ Markdown Serializer > serializeDecision > should serialize a decision log correctly
+✓ Markdown Serializer > serializeDecision > should serialize decision log with alternatives
+✓ Markdown Serializer > serializeDocument > should serialize a document correctly
+✓ Markdown Serializer > serializeDocument > should serialize document without optional fields
+✓ Markdown Serializer > updateTaskAcceptanceCriteria > should add acceptance criteria to content without existing section
+✓ Markdown Serializer > updateTaskAcceptanceCriteria > should replace existing acceptance criteria section
+✓ Markdown Serializer > updateTaskAcceptanceCriteria > should handle empty criteria array
+
+src/test/line-wrapping.test.ts:
+✓ Line Wrapping > WRAP_LIMIT constant is set to 72
+✓ Line Wrapping > blessed box with wrap:true enables text wrapping [7.00ms]
+✓ Line Wrapping > blessed box without wrap:false does not break mid-word [7.00ms]
+✓ Line Wrapping > task viewer boxes have wrap enabled [6.00ms]
+✓ Line Wrapping > board view content respects width constraints [9.00ms]
+✓ Line Wrapping > popup content boxes have wrap enabled [5.00ms]
+✓ Line Wrapping > UI components use percentage-based widths
+
+src/test/editor.test.ts:
+✓ Editor utilities > resolveEditor > should prioritize EDITOR environment variable over config defaultEditor
+✓ Editor utilities > resolveEditor > should use config defaultEditor when EDITOR environment variable is not set
+✓ Editor utilities > resolveEditor > should use EDITOR environment variable when config has no defaultEditor
+✓ Editor utilities > resolveEditor > should use platform default when neither config nor env var is set
+✓ Editor utilities > resolveEditor > should return platform default when config is null
+✓ Editor utilities > isEditorAvailable > should detect available editors [1.00ms]
+✓ Editor utilities > isEditorAvailable > should return false for non-existent editors
+✓ Editor utilities > isEditorAvailable > should handle editor commands with arguments [1.00ms]
+/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/tmp/test-editor-moba9lfn-cxr-54b53ac2/test.txt
+✓ Editor utilities > openInEditor > should open file with echo command for testing [5.00ms]
+Failed to open editor: Error: Executable not found in $PATH: "definitely-not-a-real-editor"
+✓ Editor utilities > openInEditor > should handle editor command failure gracefully [1.00ms]
+Failed to open editor: Error: Executable not found in $PATH: "node"
+188 |
+189 |                   const startTime = Date.now();
+190 |                   const success = await openInEditor(testFile, config);
+191 |                   const endTime = Date.now();
+192 |
+193 |                   expect(success).toBe(true);
+                         ^
+error: expect(received).toBe(expected)
+
+Expected: true
+Received: false
+
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/editor.test.ts:193:20)
+✗ Editor utilities > openInEditor > should wait for editor to complete before returning [3.00ms]
+test-argument /Users/teevity/Dev/misc/4.backlogMD/Backlog.md/tmp/test-editor-moba9lfw-cxr-60dfda8f/test.txt
+✓ Editor utilities > openInEditor > should handle commands with arguments by splitting on spaces [3.00ms]
+
+src/test/tui-final-summary.test.ts:
+✓ TUI Final Summary display > shows Final Summary section when present [5.00ms]
+✓ TUI Final Summary display > hides Final Summary section when empty [5.00ms]
+
+src/test/unified-view-loading.test.ts:
+✓ loadTasksForUnifiedView > uses provided loader progress and closes the loading screen [1.00ms]
+
+src/test/status-icon.test.ts:
+✓ Status Icon Component > getStatusStyle > returns correct style for Done status
+✓ Status Icon Component > getStatusStyle > returns correct style for In Progress status
+✓ Status Icon Component > getStatusStyle > returns correct style for Blocked status
+✓ Status Icon Component > getStatusStyle > returns correct style for To Do status
+✓ Status Icon Component > getStatusStyle > returns correct style for Review status
+✓ Status Icon Component > getStatusStyle > returns correct style for Testing status
+✓ Status Icon Component > getStatusStyle > returns default style for unknown status
+✓ Status Icon Component > getStatusColor > returns correct color for each status
+✓ Status Icon Component > getStatusColor > returns default color for unknown status
+✓ Status Icon Component > getStatusIcon > returns correct icon for each status
+✓ Status Icon Component > getStatusIcon > returns default icon for unknown status
+✓ Status Icon Component > formatStatusWithIcon > formats status with correct icon
+✓ Status Icon Component > formatStatusWithIcon > formats unknown status with default icon
+
+src/test/symlink-backlog-root.test.ts:
+✓ Symlinked backlog root > creates tasks when backlog root is a symlink and autoCommit is false [567.00ms]
+✓ Symlinked backlog root > auto-commit writes to the symlinked backlog repo when enabled [615.00ms]
+
+src/test/atomic-task-create.test.ts:
+✓ atomic task creation > serializes create-time writes and assigns unique ids by default [8.00ms]
+✓ atomic task creation > allows concurrent entry into the save path when USE_GLOBAL_TASK_ID_LOCK=false [2.00ms]
+✓ atomic task creation > assigns unique ids when two draft promotions race [113.00ms]
+✓ atomic task creation > assigns unique ids when two task demotions race [115.00ms]
+✓ atomic task creation > returns a user-facing error when the create lock times out [84.00ms]
+
+src/test/mermaid-markdown.test.tsx:
+✓ MermaidMarkdown > renders angle-bracket type strings without throwing [12.00ms]
+✓ MermaidMarkdown > keeps markdown rendering functional for normal content [3.00ms]
+✓ MermaidMarkdown > preserves non-http autolinks and email autolinks [2.00ms]
+
+src/test/cli-priority-filtering.test.ts:
+✓ CLI Priority Filtering > task list --priority high shows only high priority tasks [1416.00ms]
+✓ CLI Priority Filtering > task list --priority medium shows only medium priority tasks [1281.00ms]
+✓ CLI Priority Filtering > task list --priority low shows only low priority tasks [1294.00ms]
+✓ CLI Priority Filtering > task list --priority invalid shows error [613.00ms]
+✓ CLI Priority Filtering > task list --sort priority sorts by priority [1220.00ms]
+✓ CLI Priority Filtering > task list --sort id sorts by task ID [1312.00ms]
+✓ CLI Priority Filtering > task list --sort invalid shows error [684.00ms]
+✓ CLI Priority Filtering > task list combines priority filter with status filter [1301.00ms]
+✓ CLI Priority Filtering > task list combines priority filter with sort [1221.00ms]
+✓ CLI Priority Filtering > plain output includes priority indicators [1175.00ms]
+✓ CLI Priority Filtering > case insensitive priority filtering [3655.00ms]
+
+src/test/tui-interactive-editor-handoff.test.ts:
+[tui-interactive] Skipping interactive editor handoff tests: set RUN_INTERACTIVE_TUI_TESTS=1 to enable interactive PTY tests
+» interactive TUI editor handoff > launches terminal editor from board view and marks task updated
+» interactive TUI editor handoff > launches terminal editor from task list view and marks task updated
+
+src/test/offline-integration.test.ts:
+✓ Offline Integration Tests > should work in offline mode without remote [23.00ms]
+✓ Offline Integration Tests > should handle task ID generation in offline mode [20.00ms]
+✓ Offline Integration Tests > should handle repository without remote origin gracefully [17.00ms]
+✓ Offline Integration Tests > should work with config command to set remoteOperations [14.00ms]
+✓ Offline Integration Tests > should migrate existing configs to include remoteOperations [14.00ms]
+✓ Offline Integration Tests > should handle loadRemoteTasks in offline mode [14.00ms]
+
+src/test/parallel-loading.test.ts:
+✓ Parallel remote task loading > should load tasks from multiple branches in parallel [3.00ms]
+Failed to fetch remote tasks: 122 |
+123 |   it("should handle errors gracefully", async () => {
+124 |           // Create a mock that throws an error
+125 |           const errorGitOperations = {
+126 |                   fetch: async () => {
+127 |                           throw new Error("Network error");
+                    ^
+error: Network error
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/parallel-loading.test.ts:127:15)
+      at fetch (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/parallel-loading.test.ts:126:23)
+      at loadRemoteTasks (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/core/task-loader.ts:492:16)
+      at loadRemoteTasks (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/core/task-loader.ts:475:2)
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/parallel-loading.test.ts:135:29)
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/parallel-loading.test.ts:123:40)
+
+✓ Parallel remote task loading > should handle errors gracefully [1.00ms]
+✓ Parallel remote task loading > should resolve task conflicts correctly
+
+src/test/offline-mode.test.ts:
+✓ Offline Mode Configuration > GitOperations.fetch() > should skip fetch when remoteOperations is false [2.00ms]
+✓ Offline Mode Configuration > GitOperations.fetch() > should proceed with fetch when remoteOperations is true [3.00ms]
+✓ Offline Mode Configuration > GitOperations.fetch() > should handle network errors gracefully [4.00ms]
+✓ Offline Mode Configuration > Network Error Detection > should detect various network error patterns
+✓ Offline Mode Configuration > loadRemoteTasks with offline config > should skip remote operations when remoteOperations is false [1.00ms]
+✓ Offline Mode Configuration > loadRemoteTasks with offline config > should proceed with remote operations when remoteOperations is true
+✓ Offline Mode Configuration > loadRemoteTasks with offline config > should proceed with remote operations when config is null (default behavior) [1.00ms]
+✓ Offline Mode Configuration > Config Management > should handle missing remoteOperations field as default true
+✓ Offline Mode Configuration > Config Management > should handle null config gracefully [1.00ms]
+
+src/test/cli-milestone-filter.test.ts:
+✓ CLI milestone filtering > filters by milestone with case-insensitive matching [396.00ms]
+✓ CLI milestone filtering > supports -m shorthand and combines milestone with status filter [398.00ms]
+✓ CLI milestone filtering > matches closest milestone for partial and typo inputs [724.00ms]
+✓ CLI milestone filtering > matches milestone title when tasks store milestone IDs [410.00ms]
+✓ CLI milestone filtering > preserves existing listing behavior when milestone filter is omitted [427.00ms]
+
+src/test/config-hang-repro.test.ts:
+✓ Config Loading & Migration > should load config from standard backlog directory [2.00ms]
+✓ Config Loading & Migration > should load config from .backlog directory without migrating it [1.00ms]
+✓ Config Loading & Migration > migrates legacy config milestones into milestone files and removes config milestones key [4.00ms]
+✓ Config Loading & Migration > migrates quoted legacy milestone names containing commas [2.00ms]
+✓ Config Loading & Migration > migrates multiline legacy milestone list values with comments [3.00ms]
+✓ Config Loading & Migration > migrates multiline bracketed legacy milestone arrays [2.00ms]
+✓ Config Loading & Migration > migrates single-quoted legacy milestones with escaped apostrophes [4.00ms]
+
+src/test/start-id.test.ts:
+✓ task id generation > starts numbering tasks at 1 [357.00ms]
+
+src/test/agent-selection.test.ts:
+✓ processAgentSelection > returns explicit selections
+✓ processAgentSelection > auto-selects highlighted item when none selected and fallback enabled
+✓ processAgentSelection > does not auto-select highlight when fallback disabled
+✓ processAgentSelection > ignores placeholder highlight even when fallback enabled
+✓ processAgentSelection > requires retry when nothing highlighted or selected
+✓ processAgentSelection > filters out 'none' when combined with other selections
+✓ processAgentSelection > reports skip when only 'none' is selected
+✓ processAgentSelection > dedupes selections while preserving order
+
+src/test/references.test.ts:
+✓ Task References > Create task with references > should create a task with references [51.00ms]
+✓ Task References > Create task with references > should create a task without references [48.00ms]
+✓ Task References > Create task with references > should handle empty references array [54.00ms]
+✓ Task References > Update task references > should set references on existing task [56.00ms]
+✓ Task References > Update task references > should add references to existing task [49.00ms]
+✓ Task References > Update task references > should not add duplicate references [58.00ms]
+✓ Task References > Update task references > should remove references from existing task [57.00ms]
+✓ Task References > Update task references > should replace references when setting directly [55.00ms]
+✓ Task References > References in markdown > should persist references in markdown frontmatter [50.00ms]
+✓ Task References > References in markdown > should not include empty references in frontmatter [60.00ms]
+✓ Task References > Archive cleanup > removes only exact-ID references from active tasks when archiving [81.00ms]
+
+src/test/mcp-fallback.test.ts:
+✓ MCP Server Fallback Mode > should start successfully in non-backlog directory [1.00ms]
+✓ MCP Server Fallback Mode > should provide backlog://init-required resource in fallback mode [1.00ms]
+✓ MCP Server Fallback Mode > should be able to read backlog://init-required resource [1.00ms]
+✓ MCP Server Fallback Mode > should not provide task tools in fallback mode
+
+src/test/enhanced-init.test.ts:
+✓ Enhanced init command > should detect existing project and preserve config during re-initialization [9.00ms]
+✓ Enhanced init command > should create default config for new project initialization [7.00ms]
+✓ Enhanced init command > should handle editor configuration in init flow [8.00ms]
+✓ Enhanced init command > should handle config with missing fields by filling defaults [7.00ms]
+✓ Enhanced init command > should preserve existing statuses and labels during re-initialization [9.00ms]
+✓ Enhanced init command > should preserve non-init-managed config fields during re-initialization [7.00ms]
+✓ Enhanced init command > initializeProject should persist advanced Definition of Done defaults and allow clearing them [7.00ms]
+✓ Enhanced init command > should handle zero-padding configuration in init flow [6.00ms]
+✓ Enhanced init command > should handle zero-padding disabled configuration [8.00ms]
+✓ Enhanced init command > should preserve existing zero-padding config during re-initialization [8.00ms]
+✓ Enhanced init command > should create default task prefix when not specified [7.00ms]
+✓ Enhanced init command > should handle custom task prefix in config [7.00ms]
+✓ Enhanced init command > should preserve existing prefix during re-initialization [7.00ms]
+✓ Enhanced init command > initializeProject should use custom taskPrefix from advancedConfig [8.00ms]
+✓ Enhanced init command > initializeProject should preserve existing prefix on re-init [6.00ms]
+✓ Enhanced init command > initializeProject should use default prefix when not specified [7.00ms]
+✓ Enhanced init command > prefixes should persist to disk and reload correctly with new Core instance [7.00ms]
+✓ Enhanced init command > initializeProject should create .backlog when selected [10.00ms]
+✓ Enhanced init command > initializeProject should honor .backlog source when backlogDirectory is omitted [7.00ms]
+✓ Enhanced init command > initializeProject should create a root backlog.config.yml for custom backlog directories [9.00ms]
+✓ Enhanced init command > initializeProject should default custom backlog directories to root config when configLocation is omitted [10.00ms]
+✓ Enhanced init command > initializeProject should infer custom source from backlogDirectory when source is omitted [11.00ms]
+✓ Enhanced init command > initializeProject should reject custom backlog directories with folder config location
+✓ Enhanced init command > initializeProject should reject mismatched built-in source and custom backlog path [1.00ms]
+
+src/test/cli-task-wizard.test.ts:
+✓ CLI task wizard integration compatibility > preserves non-interactive missing title error for task create [342.00ms]
+✓ CLI task wizard integration compatibility > preserves non-interactive missing taskId error for task edit [378.00ms]
+✓ CLI task wizard integration compatibility > keeps legacy non-interactive edit behavior when taskId is provided [684.00ms]
+
+src/test/build.test.ts:
+43 |                            return;
+44 |                    }
+45 |                    throw error;
+46 |            }
+47 |
+48 |            const helpResult = await $`${OUTFILE} --help`.quiet();
+                    ^
+ShellError: Failed with exit code 1
+ exitCode: 1,
+   stdout: "",
+   stderr: "bun: Exec format error: /Users/teevity/Dev/misc/4.backlogMD/Backlog.md/tmp/test-build-mobaa2oe-cxr-34a54e89/backlog\n",
+
+      at new ShellPromise (75:16)
+      at BunShell (191:35)
+      at <anonymous> (/Users/teevity/Dev/misc/4.backlogMD/Backlog.md/src/test/build.test.ts:48:28)
+✗ CLI packaging > should build and run compiled executable [646.00ms]
+
+src/test/filter-header-navigation.test.ts:
+✓ resolveSearchHorizontalNavigation > cycles immediately when search is empty
+✓ resolveSearchHorizontalNavigation > cycles prev only when cursor is at the start boundary
+✓ resolveSearchHorizontalNavigation > cycles next only when cursor is at the end boundary
+
+src/test/desc-alias.test.ts:
+✓ --desc alias functionality > should create task with --desc alias [747.00ms]
+✓ --desc alias functionality > should verify task created with --desc has correct description [374.00ms]
+✓ --desc alias functionality > should edit task description with --desc alias [416.00ms]
+✓ --desc alias functionality > should create draft with --desc alias [375.00ms]
+✓ --desc alias functionality > should verify draft created with --desc has correct description [341.00ms]
+✓ --desc alias functionality > should show --desc in help text [368.00ms]
+
+src/test/search-service.test.ts:
+✓ SearchService > indexes tasks, documents, and decisions and returns combined results [13.00ms]
+✓ SearchService > applies status and priority filters without running a text query [17.00ms]
+✓ SearchService > filters tasks by labels (requiring all selected labels) [16.00ms]
+✓ SearchService > refreshes the index when content changes [14.00ms]
+
+src/test/agent-instructions.test.ts:
+✓ addAgentInstructions > creates guideline files when none exist [6.00ms]
+✓ addAgentInstructions > appends guideline files when they already exist [6.00ms]
+✓ addAgentInstructions > creates only selected files [3.00ms]
+✓ addAgentInstructions > loads guideline content from file paths [2.00ms]
+✓ addAgentInstructions > does not duplicate content when run multiple times (idempotent) [6.00ms]
+✓ addAgentInstructions > preserves existing content and adds Backlog.md content only once [4.00ms]
+✓ addAgentInstructions > handles different file types with appropriate markers [3.00ms]
+✓ addAgentInstructions > replaces CLI guidelines with MCP nudge when switching modes [4.00ms]
+✓ addAgentInstructions > replaces MCP nudge with CLI guidelines when switching modes [3.00ms]
+
+src/test/mcp-stdio-exit.test.ts:
+✓ MCP stdio shutdown > exits when stdin closes [354.00ms]
+
+src/test/task-updated-date.test.ts:
+✓ upsertTaskUpdatedDate > replaces existing updated_date value
+✓ upsertTaskUpdatedDate > inserts updated_date after created_date when missing
+✓ upsertTaskUpdatedDate > inserts updated_date before frontmatter close when created_date is absent
+✓ upsertTaskUpdatedDate > preserves CRLF line endings
+
+src/test/mcp-milestones.test.ts:
+✓ MCP milestone tools > supports setting and clearing milestone via task_create/task_edit [111.00ms]
+✓ MCP milestone tools > supports numeric milestone aliases for ID-based operations [78.00ms]
+✓ MCP milestone tools > resolves zero-padded legacy milestone IDs for numeric aliases [86.00ms]
+✓ MCP milestone tools > adds milestones as files with validation [50.00ms]
+✓ MCP milestone tools > lists file-based and task-only milestones [74.00ms]
+✓ MCP milestone tools > archives milestones and hides them from lists [72.00ms]
+✓ MCP milestone tools > does not reuse archived milestone IDs when adding new milestones [44.00ms]
+✓ MCP milestone tools > renames milestones and updates local tasks by default [84.00ms]
+✓ MCP milestone tools > keeps git clean when renaming milestones with autoCommit enabled [161.00ms]
+✓ MCP milestone tools > only rewrites the default description section when renaming milestones [45.00ms]
+✓ MCP milestone tools > treats no-op milestone renames as successful without creating commits [98.00ms]
+✓ MCP milestone tools > does not include unrelated staged files in milestone auto-commits [161.00ms]
+✓ MCP milestone tools > does not include unrelated staged files in milestone archive auto-commits [148.00ms]
+✓ MCP milestone tools > prefers milestone ID matches over title collisions [65.00ms]
+✓ MCP milestone tools > supports renaming milestone files without task rewrites when updateTasks=false [82.00ms]
+✓ MCP milestone tools > rejects rename targets that collide with another milestone alias [124.00ms]
+✓ MCP milestone tools > rejects add/rename alias collisions when an existing ID is zero-padded [42.00ms]
+✓ MCP milestone tools > supports milestone ID inputs for rename/remove [91.00ms]
+✓ MCP milestone tools > updates title-based task milestone values when renaming by milestone ID [75.00ms]
+✓ MCP milestone tools > updates numeric alias task milestone values when renaming by title [86.00ms]
+✓ MCP milestone tools > does not cross-match reused titles when removing by milestone ID [95.00ms]
+✓ MCP milestone tools > does not cross-match archived milestone IDs when removing a title that looks like an ID [92.00ms]
+✓ MCP milestone tools > does not cross-match archived milestone IDs when renaming a title that looks like an ID [88.00ms]
+✓ MCP milestone tools > prefers canonical IDs when zero-padded and canonical ID files both exist [68.00ms]
+✓ MCP milestone tools > prefers archived milestone IDs over active title matches for ID-like task edits [73.00ms]
+✓ MCP milestone tools > reports archived milestone task values when active titles look like archived IDs [79.00ms]
+✓ MCP milestone tools > treats duplicate active titles as unresolved in milestone_list reporting [77.00ms]
+✓ MCP milestone tools > allocates new milestone IDs from milestone frontmatter IDs before filename IDs [47.00ms]
+✓ MCP milestone tools > treats reused title input as the active milestone [96.00ms]
+✓ MCP milestone tools > removes milestones and clears or reassigns local tasks [86.00ms]
+✓ MCP milestone tools > can remove a milestone file while keeping task milestone values [72.00ms]
+
+src/test/mcp-tasks-local-filter.test.ts:
+✓ MCP task tools local filtering > filters cross-branch tasks out of task_list [1.00ms]
+✓ MCP task tools local filtering > filters cross-branch tasks out of task_search
+
+src/test/board-render.test.ts:
+✓ shouldRebuildColumns > returns false when columns and task ordering are unchanged
+✓ shouldRebuildColumns > returns true when a column loses items
+✓ shouldRebuildColumns > returns true when column task ordering changes
+✓ shouldRebuildColumns > returns true when number of columns changes
+
+src/test/sequences-unsequenced-eligibility.test.ts:
+✓ canMoveToUnsequenced > returns true for isolated tasks (no deps, no dependents)
+✓ canMoveToUnsequenced > returns false when task has dependencies
+✓ canMoveToUnsequenced > returns false when task has dependents
+
+src/test/unified-view-filters.test.ts:
+✓ unified view filter state > initializes milestone filter from options [1.00ms]
+✓ unified view filter state > preserves milestone filter when merging filter updates
+✓ unified view filter state > excludes status from kanban shared filters
+✓ unified view filter state > keeps shared filter results consistent between task list and kanban [1.00ms]
+
+src/test/prefix-migration.test.ts:
+✓ Draft Prefix Migration > needsDraftPrefixMigration > should return false when config is null [8.00ms]
+✓ Draft Prefix Migration > needsDraftPrefixMigration > should return true when prefixes section is missing [7.00ms]
+✓ Draft Prefix Migration > needsDraftPrefixMigration > should return false when prefixes section exists [8.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should add prefixes section to config when drafts folder is empty [10.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should rename task-*.md files in drafts folder to draft-*.md [11.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should update IDs inside migrated files [13.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should handle multiple task-*.md files [16.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should be idempotent - running twice has same result [8.00ms]
+✓ Draft Prefix Migration > migrateDraftPrefixes > should not affect existing draft-*.md files [12.00ms]
+
+src/test/id-generation.test.ts:
+✓ Task ID Generation with Archives > should reuse IDs from archived tasks (soft delete behavior) [87.00ms]
+✓ Task ID Generation with Archives > should consider completed tasks but not archived tasks for ID generation [41.00ms]
+✓ Task ID Generation with Archives > should handle subtasks correctly with archived parents [54.00ms]
+✓ Task ID Generation with Archives > should work with zero-padded IDs and reuse archived IDs [28.00ms]
+✓ Task ID Generation with Archives > should detect existing subtasks with different casing (legacy data) [22.00ms]
+
+src/test/append-implementation-notes.test.ts:
+✓ Append Implementation Notes via task edit --append-notes > appends to existing Implementation Notes with single blank line separation [679.00ms]
+✓ Append Implementation Notes via task edit --append-notes > creates Implementation Notes at correct position when missing (after Plan) [349.00ms]
+✓ Append Implementation Notes via task edit --append-notes > supports multi-line appended content and preserves literal newlines [365.00ms]
+✓ Append Implementation Notes via task edit --append-notes > allows combining --notes (replace) with --append-notes (append) [352.00ms]
+
+src/test/task-search-label-filter.test.ts:
+✓ createTaskSearchIndex label filtering > filters tasks by single label
+✓ createTaskSearchIndex label filtering > matches any of the selected labels
+
+src/test/docs-recursive.test.ts:
+✓ Docs recursive listing and ID generation > lists and views documents from subdirectories and generates unique IDs [19.00ms]
+✓ Docs recursive listing and ID generation > includes documents from symlinked subdirectories [10.00ms]
+
+src/test/board-command.test.ts:
+✓ Board command integration > Board loading > should load board without errors [147.00ms]
+✓ Board command integration > Board loading > should handle empty task list gracefully [149.00ms]
+✓ Board command integration > Board loading > should validate ViewSwitcher initialization with kanban view [152.00ms]
+✓ Board command integration > Board loading > should handle getKanbanData method correctly [157.00ms]
+✓ Board command integration > Cross-branch task resolution > should handle getLatestTaskStatesForIds with proper parameters [186.00ms]
+
+src/test/web-task-details-modal-documentation.test.tsx:
+✓ Web task popup documentation display > renders documentation entries when present [27.00ms]
+✓ Web task popup documentation display > hides documentation section when empty [6.00ms]
+
+src/test/code-path.test.ts:
+✓ Code path utilities > CODE_PATH_PATTERNS > should match backticked file paths [3.00ms]
+✓ Code path utilities > CODE_PATH_PATTERNS > should not match non-path backticks
+✓ Code path utilities > isCodePath > should detect file paths with extensions
+✓ Code path utilities > isCodePath > should detect paths with separators
+✓ Code path utilities > isCodePath > should not detect non-paths
+✓ Code path utilities > extractCodePaths > should extract file paths from text
+✓ Code path utilities > extractCodePaths > should ignore non-path backticks
+✓ Code path utilities > extractCodePaths > should handle empty or no matches
+✓ Code path utilities > extractCodePaths > should handle complex paths
+✓ Code path utilities > styleCodePath > should wrap path in gray styling tags
+✓ Code path utilities > styleCodePath > should handle paths with special characters
+✓ Code path utilities > transformCodePaths > should style isolated code paths
+✓ Code path utilities > transformCodePaths > should extract and separate multiple paths in prose
+✓ Code path utilities > transformCodePaths > should preserve line breaks [1.00ms]
+✓ Code path utilities > transformCodePaths > should handle text without code paths
+✓ Code path utilities > transformCodePaths > should handle empty input
+✓ Code path utilities > transformCodePaths > should handle only a path on a line
+✓ Code path utilities > transformCodePathsPlain > should preserve code paths in plain text
+✓ Code path utilities > transformCodePathsPlain > should ignore non-path backticks
+✓ Code path utilities > transformCodePathsPlain > should handle empty input
+✓ Code path utilities > comprehensive path detection > should capture 100% of code paths in test fixture
+
+src/test/tui-definition-of-done.test.ts:
+✓ TUI Definition of Done display > shows Definition of Done entries in task popup content [11.00ms]
+
+src/test/server-search-endpoint.test.ts:
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > returns tasks, documents, and decisions from the shared search service [39.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > filters search results by priority and status [86.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > filters task listings by priority via the content store [75.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > rejects unsupported priority filters with 400 [69.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > supports zero-padded ids and dependency-aware search [76.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > returns newly created tasks immediately after POST [77.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > persists milestone when creating tasks via POST [136.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > resolves numeric milestone aliases to zero-padded legacy milestone IDs [86.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > prefers canonical IDs when zero-padded and canonical milestone IDs both exist [86.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > prefers archived milestone IDs over active title matches for ID-shaped task inputs [72.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > rejects milestone titles that collide with existing milestone IDs [69.00ms]
+🚀 Backlog.md browser interface running at http://localhost:0
+📊 Project: Server Search
+⏹️  Press Ctrl+C to stop the server
+💡 Open your browser and navigate to the URL above
+Server stopped
+✓ BacklogServer search endpoint > rebuilds the Fuse index when markdown content changes [182.00ms]
+
+src/test/bun-options.test.ts:
+✓ BUN_OPTIONS environment variable handling > should temporarily isolate BUN_OPTIONS during CLI parsing
+✓ BUN_OPTIONS environment variable handling > should handle missing BUN_OPTIONS gracefully
+✓ BUN_OPTIONS environment variable handling > should preserve BUN_OPTIONS for subsequent command usage
+
+src/test/runtime-cwd.test.ts:
+✓ resolveRuntimeCwd > uses process.cwd() when no override is provided [2.00ms]
+✓ resolveRuntimeCwd > uses BACKLOG_CWD when environment override is provided [1.00ms]
+✓ resolveRuntimeCwd > gives --cwd option precedence over BACKLOG_CWD [1.00ms]
+✓ resolveRuntimeCwd > supports relative override paths
+✓ resolveRuntimeCwd > throws when override path is invalid [1.00ms]
+
+src/test/board-ui-selection.test.ts:
+✓ board UI task selection > compareTaskIds sorts tasks numerically by ID
+✓ board UI task selection > compareTaskIds handles decimal task IDs correctly
+✓ board UI task selection > simulates board view task selection with sorted tasks
+✓ board UI task selection > ensures consistent ordering between display and selection
+
+src/test/cli-incrementing-ids.test.ts:
+✓ CLI ID Incrementing Behavior > should increment task IDs correctly [395.00ms]
+✓ CLI ID Incrementing Behavior > should increment document IDs correctly [375.00ms]
+✓ CLI ID Incrementing Behavior > should increment decision IDs correctly [355.00ms]
+
+src/test/mcp-definition-of-done-defaults.test.ts:
+✓ MCP Definition of Done default tools > gets and upserts project Definition of Done defaults [46.00ms]
+✓ MCP Definition of Done default tools > applies updated project defaults to task creation and supports per-task override behavior [88.00ms]
+✓ MCP Definition of Done default tools > rejects delimiter-sensitive DoD defaults (commas) to prevent config corruption [47.00ms]
+
+src/test/local-branch-tasks.test.ts:
+✓ Local branch task discovery > buildLocalBranchTaskIndex > should build index from local branches excluding current branch
+✓ Local branch task discovery > buildLocalBranchTaskIndex > should exclude origin/ branches
+✓ Local branch task discovery > buildLocalBranchTaskIndex > should exclude current branch
+✓ Local branch task discovery > loadLocalBranchTasks > should discover tasks from other local branches [2.00ms]
+✓ Local branch task discovery > loadLocalBranchTasks > should skip tasks that exist in filesystem when provided
+✓ Local branch task discovery > loadLocalBranchTasks > should return empty array when on detached HEAD
+✓ Local branch task discovery > loadLocalBranchTasks > should return empty when only current branch exists [1.00ms]
+✓ Local branch task discovery > loadLocalBranchTasks > should match local tasks with uppercase IDs to index keys (custom prefix)
+✓ Local branch task discovery > loadLocalBranchTasks > should hydrate tasks that do not exist locally with custom prefix
+
+src/test/mcp-documents.test.ts:
+
+██████╗  █████╗  █████╗ ██╗  ██╗██╗      █████╗  ██████╗    ███╗   ███╗██████╗
+██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝██║     ██╔══██╗██╔════╝    ████╗ ████║██╔══██╗
+██████╦╝███████║██║  ╚═╝█████═╝ ██║     ██║  ██║██║  ██╗    ██╔████╔██║██║  ██║
+██╔══██╗██╔══██║██║  ██╗██╔═██╗ ██║     ██║  ██║██║  ╚██╗   ██║╚██╔╝██║██║  ██║
+██████╦╝██║  ██║╚█████╔╝██║ ╚██╗███████╗╚█████╔╝╚██████╔╝██╗██║ ╚═╝ ██║██████╔╝
+╚═════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝╚══════╝ ╚════╝  ╚═════╝ ╚═╝╚═╝     ╚═╝╚═════╝
+
+Backlog.md v1.44.0
+
+Quickstart
+  backlog task create "Title" -d "Description"  Create a new task
+  backlog task list --plain  List tasks (plain text)
+  backlog board  Open the TUI Kanban board
+  backlog browser  Start the web UI
+  backlog overview  Show project statistics
+
+Docs: https://backlog.md

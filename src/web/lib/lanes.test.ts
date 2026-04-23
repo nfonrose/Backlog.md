@@ -177,4 +177,16 @@ describe("sortTasksForStatus", () => {
 		const sorted = sortTasksForStatus(tasks, "Done").map((t) => t.id);
 		expect(sorted).toEqual(["task-2", "task-3", "task-1"]);
 	});
+
+	it("prioritizes updatedDate over ordinal when sortDoneByRecency is enabled", () => {
+		const tasks = [
+			makeTask({ id: "task-1", status: "Done", ordinal: 10, updatedDate: "2024-01-01" }),
+			makeTask({ id: "task-2", status: "Done", ordinal: 20, updatedDate: "2024-01-05" }),
+			makeTask({ id: "task-3", status: "Done", ordinal: 30, updatedDate: "2024-01-03" }),
+		];
+
+		const sorted = sortTasksForStatus(tasks, "Done", { sortDoneByRecency: true }).map((t) => t.id);
+		// Should be task-2 (Jan 05), then task-3 (Jan 03), then task-1 (Jan 01)
+		expect(sorted).toEqual(["task-2", "task-3", "task-1"]);
+	});
 });

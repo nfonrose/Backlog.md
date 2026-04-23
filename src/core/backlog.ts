@@ -1024,7 +1024,7 @@ export class Core {
 		return filepath;
 	}
 
-	async updateTask(task: Task, autoCommit?: boolean): Promise<void> {
+	async updateTask(task: Task, autoCommit?: boolean, skipDateUpdate = false): Promise<void> {
 		normalizeAssignee(task);
 
 		// Load original task to detect status changes for callbacks
@@ -1033,8 +1033,10 @@ export class Core {
 		const newStatus = task.status ?? "";
 		const statusChanged = oldStatus !== newStatus;
 
-		// Always set updatedDate when updating a task
-		task.updatedDate = new Date().toISOString().slice(0, 16).replace("T", " ");
+		// Set updatedDate unless explicitly skipped
+		if (!skipDateUpdate) {
+			task.updatedDate = new Date().toISOString().slice(0, 16).replace("T", " ");
+		}
 
 		await this.fs.saveTask(task);
 		// Keep any in-process ContentStore in sync for immediate UI/search freshness.
@@ -1749,10 +1751,15 @@ export class Core {
 		return await this.updateTaskFromInput(taskId, input, autoCommit);
 	}
 
-	async updateTasksBulk(tasks: Task[], commitMessage?: string, autoCommit?: boolean): Promise<void> {
+	async updateTasksBulk(
+		tasks: Task[],
+		commitMessage?: string,
+		autoCommit?: boolean,
+		skipDateUpdate = false,
+	): Promise<void> {
 		// Update all tasks without committing individually
 		for (const task of tasks) {
-			await this.updateTask(task, false); // Don't auto-commit each one
+			await this.updateTask(task, false, skipDateUpdate); // Don't auto-commit each one
 		}
 
 		// Commit all changes at once if auto-commit is enabled
@@ -1875,11 +1882,27 @@ export class Core {
 		});
 
 		if (changedTasks.length > 0) {
-			await this.updateTasksBulk(
-				changedTasks,
-				params.commitMessage ?? `Reorder tasks in ${targetStatus}`,
-				params.autoCommit,
-			);
+			const config = await this.fs.loadConfig();
+			const canSkipDateUpdate = config?.centralizedTasksOrdinals === true;
+
+			// We can skip the date update for a task if ONLY its ordinal changed
+			// If status or milestone changed, we should still update the date.
+			for (const task of changedTasks) {
+				const original = originalMap.get(task.id);
+				const statusChanged = original && (original.status ?? "") !== (task.status ?? "");
+				const milestoneChanged = original && (original.milestone ?? "") !== (task.milestone ?? "");
+
+				const skipThisDateUpdate = canSkipDateUpdate && !statusChanged && !milestoneChanged;
+
+				await this.updateTask(task, false, skipThisDateUpdate);
+			}
+
+			// Commit all changes at once if auto-commit is enabled
+			if (await this.shouldAutoCommit(params.autoCommit)) {
+				const backlogDir = await this.getBacklogDirectoryName();
+				const repoRoot = await this.git.stageBacklogDirectory(backlogDir);
+				await this.git.commitChanges(params.commitMessage ?? `Reorder tasks in ${targetStatus}`, repoRoot);
+			}
 		}
 
 		const updatedTask = updatesMap.get(taskId) ?? updatedMoved;

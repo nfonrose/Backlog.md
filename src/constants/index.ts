@@ -38,6 +38,8 @@ export const DEFAULT_FILES = {
 	CONFIG_YAML: "config.yaml",
 	/** Root-level backlog configuration file */
 	ROOT_CONFIG: "backlog.config.yml",
+	/** Task ordinals file */
+	TASK_ORDINALS: "task-ordinals.yml",
 } as const;
 
 /**

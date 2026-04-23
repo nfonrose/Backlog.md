@@ -8,7 +8,11 @@ import {
 	updateStructuredSections,
 } from "./structured-sections.ts";
 
-export function serializeTask(task: Task): string {
+export interface SerializeTaskOptions {
+	excludeOrdinal?: boolean;
+}
+
+export function serializeTask(task: Task, options?: SerializeTaskOptions): string {
 	normalizeAssignee(task);
 	const frontmatter = {
 		id: task.id,
@@ -26,7 +30,7 @@ export function serializeTask(task: Task): string {
 		...(task.parentTaskId && { parent_task_id: task.parentTaskId }),
 		...(task.subtasks && task.subtasks.length > 0 && { subtasks: task.subtasks }),
 		...(task.priority && { priority: task.priority }),
-		...(task.ordinal !== undefined && { ordinal: task.ordinal }),
+		...(task.ordinal !== undefined && !options?.excludeOrdinal && { ordinal: task.ordinal }),
 		...(task.onStatusChange && { onStatusChange: task.onStatusChange }),
 	};
 

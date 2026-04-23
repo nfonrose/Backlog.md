@@ -231,6 +231,46 @@ const Settings: React.FC = () => {
 							</div>
 
 							<div>
+								<label className="flex items-center justify-between">
+									<div>
+										<span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort Done By Recency</span>
+										<p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+											Order the Done column by most recently updated tasks first
+										</p>
+									</div>
+									<div className="relative inline-flex items-center cursor-pointer">
+										<input
+											type="checkbox"
+											checked={config.sortDoneByRecency}
+											onChange={(e) => handleInputChange('sortDoneByRecency', e.target.checked)}
+											className="sr-only peer"
+										/>
+										<div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-circle peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-circle after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+									</div>
+								</label>
+							</div>
+
+							<div>
+								<label className="flex items-center justify-between">
+									<div>
+										<span className="text-sm font-medium text-gray-700 dark:text-gray-300">Centralized Ordinals</span>
+										<p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+											Store task ordinals in a single YAML file to reduce Git noise
+										</p>
+									</div>
+									<div className="relative inline-flex items-center cursor-pointer">
+										<input
+											type="checkbox"
+											checked={config.centralizedTasksOrdinals}
+											onChange={(e) => handleInputChange('centralizedTasksOrdinals', e.target.checked)}
+											className="sr-only peer"
+										/>
+										<div className="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-circle peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-circle after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+									</div>
+								</label>
+							</div>
+
+							<div>
 								<label htmlFor="defaultStatus" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
 									Default Status
 								</label>
