@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Board from './Board';
-import { type Milestone, type Task } from '../../types';
+import { type Milestone, type Task, type BacklogConfig } from '../../types';
 import { type LaneMode } from '../lib/lanes';
 
 interface BoardPageProps {
@@ -14,6 +14,7 @@ interface BoardPageProps {
 	milestoneEntities: Milestone[];
 	archivedMilestones: Milestone[];
 	isLoading: boolean;
+	config: BacklogConfig | null;
 }
 
 export default function BoardPage({
@@ -26,6 +27,7 @@ export default function BoardPage({
 	milestoneEntities,
 	archivedMilestones,
 	isLoading,
+	config,
 }: BoardPageProps) {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [highlightTaskId, setHighlightTaskId] = useState<string | null>(null);
@@ -101,6 +103,7 @@ export default function BoardPage({
 				laneMode={laneMode}
 				onLaneChange={handleLaneChange}
 				milestoneFilter={milestoneFilter}
+				config={config}
 			/>
 		</div>
 	);

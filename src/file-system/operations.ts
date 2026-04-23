@@ -1366,6 +1366,19 @@ ${description || `Milestone: ${title}`}`,
 				case "auto_commit":
 					config.autoCommit = value.toLowerCase() === "true";
 					break;
+				case "sort_done_by_recency":
+					config.sortDoneByRecency = value.toLowerCase() === "true";
+					break;
+				case "include_date_time_in_dates":
+					config.includeDateTimeInDates = value.toLowerCase() === "true";
+					break;
+				case "task_resolution_strategy": {
+					const strategy = value.toLowerCase();
+					if (strategy === "most_recent" || strategy === "most_progressed") {
+						config.taskResolutionStrategy = strategy;
+					}
+					break;
+				}
 				case "zero_padded_ids":
 					config.zeroPaddedIds = Number.parseInt(value, 10);
 					break;
@@ -1403,12 +1416,15 @@ ${description || `Milestone: ${title}`}`,
 			defaultStatus: config.defaultStatus,
 			dateFormat: config.dateFormat || "yyyy-mm-dd",
 			maxColumnWidth: config.maxColumnWidth,
+			taskResolutionStrategy: config.taskResolutionStrategy,
 			defaultEditor: config.defaultEditor,
 			autoOpenBrowser: config.autoOpenBrowser,
 			defaultPort: config.defaultPort,
 			remoteOperations: config.remoteOperations,
 			autoCommit: config.autoCommit,
+			sortDoneByRecency: config.sortDoneByRecency,
 			zeroPaddedIds: config.zeroPaddedIds,
+			includeDateTimeInDates: config.includeDateTimeInDates,
 			bypassGitHooks: config.bypassGitHooks,
 			checkActiveBranches: config.checkActiveBranches,
 			activeBranchDays: config.activeBranchDays,
@@ -1432,12 +1448,17 @@ ${description || `Milestone: ${title}`}`,
 				: []),
 			`date_format: ${config.dateFormat}`,
 			...(config.maxColumnWidth ? [`max_column_width: ${config.maxColumnWidth}`] : []),
+			...(config.taskResolutionStrategy ? [`task_resolution_strategy: ${config.taskResolutionStrategy}`] : []),
 			...(config.defaultEditor ? [`default_editor: "${config.defaultEditor}"`] : []),
 			...(typeof config.autoOpenBrowser === "boolean" ? [`auto_open_browser: ${config.autoOpenBrowser}`] : []),
 			...(config.defaultPort ? [`default_port: ${config.defaultPort}`] : []),
 			...(typeof config.remoteOperations === "boolean" ? [`remote_operations: ${config.remoteOperations}`] : []),
 			...(typeof config.autoCommit === "boolean" ? [`auto_commit: ${config.autoCommit}`] : []),
+			...(typeof config.sortDoneByRecency === "boolean" ? [`sort_done_by_recency: ${config.sortDoneByRecency}`] : []),
 			...(typeof config.zeroPaddedIds === "number" ? [`zero_padded_ids: ${config.zeroPaddedIds}`] : []),
+			...(typeof config.includeDateTimeInDates === "boolean"
+				? [`include_date_time_in_dates: ${config.includeDateTimeInDates}`]
+				: []),
 			...(typeof config.bypassGitHooks === "boolean" ? [`bypass_git_hooks: ${config.bypassGitHooks}`] : []),
 			...(typeof config.checkActiveBranches === "boolean"
 				? [`check_active_branches: ${config.checkActiveBranches}`]

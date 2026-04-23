@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { type Milestone, type Task } from '../../types';
+import { type Milestone, type Task, type BacklogConfig } from '../../types';
 import { apiClient, type ReorderTaskPayload } from '../lib/api';
 import { buildLanes, DEFAULT_LANE_KEY, groupTasksByLaneAndStatus, type LaneMode } from '../lib/lanes';
 import { collectArchivedMilestoneKeys, milestoneKey } from '../utils/milestones';
@@ -21,6 +21,7 @@ interface BoardProps {
   laneMode: LaneMode;
   onLaneChange: (mode: LaneMode) => void;
   milestoneFilter?: string | null;
+  config: BacklogConfig | null;
 }
 
 const Board: React.FC<BoardProps> = ({
@@ -36,6 +37,7 @@ const Board: React.FC<BoardProps> = ({
   laneMode,
   onLaneChange,
   milestoneFilter,
+  config,
 }) => {
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [dragSourceStatus, setDragSourceStatus] = useState<string | null>(null);
@@ -266,8 +268,9 @@ const Board: React.FC<BoardProps> = ({
       archivedMilestoneIds,
       milestoneEntities,
       archivedMilestones,
+      sortDoneByRecency: config?.sortDoneByRecency,
     }),
-    [laneMode, lanes, statuses, tasks, archivedMilestoneIds, milestoneEntities, archivedMilestones]
+    [laneMode, lanes, statuses, tasks, archivedMilestoneIds, milestoneEntities, archivedMilestones, config]
   );
 
   // Separate grouping for filtered display in columns
@@ -277,8 +280,9 @@ const Board: React.FC<BoardProps> = ({
         archivedMilestoneIds,
         milestoneEntities,
         archivedMilestones,
+        sortDoneByRecency: config?.sortDoneByRecency,
       }),
-    [laneMode, lanes, statuses, filteredTasks, archivedMilestoneIds, milestoneEntities, archivedMilestones]
+    [laneMode, lanes, statuses, filteredTasks, archivedMilestoneIds, milestoneEntities, archivedMilestones, config]
   );
 
   const getTasksForLane = (laneKey: string, status: string): Task[] => {

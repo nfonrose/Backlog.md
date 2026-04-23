@@ -501,6 +501,7 @@ function App() {
                 milestoneEntities={milestoneEntities}
                 archivedMilestones={archivedMilestones}
                 isLoading={isLoading}
+                config={config}
               />
             }
           />

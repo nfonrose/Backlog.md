@@ -274,6 +274,7 @@ export interface BacklogConfig {
 	autoCommit?: boolean;
 	zeroPaddedIds?: number;
 	includeDateTimeInDates?: boolean; // Whether to include time in new dates
+	sortDoneByRecency?: boolean; // Whether to sort Done column by updated date descending
 	bypassGitHooks?: boolean;
 	checkActiveBranches?: boolean; // Check task states across active branches (default: true)
 	activeBranchDays?: number; // How many days a branch is considered active (default: 30)
