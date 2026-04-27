@@ -164,6 +164,7 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isDraftMode, setIsDraftMode] = useState(false);
+  const [prefilledTaskData, setPrefilledTaskData] = useState<Partial<Task> | null>(null);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [availableLabels, setAvailableLabels] = useState<string[]>([]);
   const [projectName, setProjectName] = useState<string>('');
@@ -360,6 +361,7 @@ function App() {
   const handleNewTask = () => {
     setEditingTask(null);
     setIsDraftMode(false);
+    setPrefilledTaskData(null);
     setShowModal(true);
   };
 
@@ -367,6 +369,14 @@ function App() {
     // Create a draft task (same as new task but with status 'Draft')
     setEditingTask(null);
     setIsDraftMode(true);
+    setPrefilledTaskData(null);
+    setShowModal(true);
+  };
+
+  const handleCreateChildTask = (parentId: string) => {
+    setEditingTask(null);
+    setIsDraftMode(false);
+    setPrefilledTaskData({ parentTaskId: parentId });
     setShowModal(true);
   };
 
@@ -379,6 +389,7 @@ function App() {
     setShowModal(false);
     setEditingTask(null);
     setIsDraftMode(false);
+    setPrefilledTaskData(null);
   };
 
   const refreshData = useCallback(async () => {
@@ -553,11 +564,13 @@ function App() {
           onSaved={refreshData}
           onSubmit={handleSubmitTask}
           onArchive={editingTask ? () => handleArchiveTask(editingTask.id) : undefined}
+          onCreateChild={handleCreateChildTask}
           availableStatuses={isDraftMode ? ['Draft', ...statuses] : statuses}
           availableMilestones={milestones}
           milestoneEntities={milestoneEntities}
           archivedMilestoneEntities={archivedMilestones}
           isDraftMode={isDraftMode}
+          prefilledData={prefilledTaskData || undefined}
           definitionOfDoneDefaults={config?.definitionOfDone ?? []}
         />
 

@@ -2,6 +2,8 @@
 
 This project uses a [Lima](https://github.com/lima-vm/lima) VM to provide a secure, isolated development environment. This protects your host machine from potential supply chain vulnerabilities by ensuring that all code execution occurs within the Linux VM.
 
+We have added the features described in 
+
 ## Prerequisites
 
 - macOS (the config is optimized for `Virtualization.framework`)
@@ -186,3 +188,50 @@ L'intelligence coûte plus cher que le volume : Même si tu as balancé 5 fois p
 Le danger des 200k : Ta session Pro est facturée au tarif "Large Context" ($4,00 l'input au lieu de $2,00). Si tu arrives à fragmenter tes requêtes Pro pour rester sous les 200k tokens de contexte, tu divises cette partie de la facture par deux.
 
 C'est une architecture "multi-agents" assez propre : tu utilises le petit modèle pour résumer, le gros pour réfléchir et le moyen pour exécuter. C'est la meilleure stratégie pour garder une facture sous les 1 $.
+
+
+
+### Session 3 (2026/04/26 mid of afternoon)
+
+```
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                                                        │
+│  Agent powering down. Goodbye!                                                                                                                                                         │
+│                                                                                                                                                                                        │
+│  Interaction Summary                                                                                                                                                                   │
+│  Session ID:                 7b8a181d-c97e-4038-a63b-0852fec57923                                                                                                                      │
+│  Tool Calls:                 38 ( ✓ 38 x 0 )                                                                                                                                           │
+│  Success Rate:               100.0%                                                                                                                                                    │
+│  User Agreement:             100.0% (38 reviewed)                                                                                                                                      │
+│  Code Changes:               +34 -2                                                                                                                                                    │
+│                                                                                                                                                                                        │
+│  Performance                                                                                                                                                                           │
+│  Wall Time:                  12m 40s                                                                                                                                                   │
+│  Agent Active:               2m 5s                                                                                                                                                     │
+│    » API Time:               1m 54s (91.0%)                                                                                                                                            │
+│    » Tool Time:              11.3s (9.0%)                                                                                                                                              │
+│                                                                                                                                                                                        │
+│                                                                                                                                                                                        │
+│  Model Usage                                                                                                                                                                           │
+│  Use /model to view model quota information                                                                                                                                            │
+│                                                                                                                                                                                        │
+│  Model                           Reqs  Input Tokens   Cache Reads Output Tokens                                                                                                        │
+│  ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────  │
+│  gemini-3-flash-preview            40     1,938,766     1,706,615         6,252                                                                                                        │
+│    ↳ main                          39     1,930,879     1,706,615         6,138                                                                                                        │
+│    ↳ utility_loop_detector          1         7,887             0           114                                                                                                        │
+│  To resume this session: gemini --resume 7b8a181d-c97e-4038-a63b-0852fec57923                                                                                                          │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+
+
+
+
+## Features added to the PRT custom fork
+
+### BACK-414 - Implement sorting "Done" column by newest first
+
+### BACK-415 - Implement centralized task ordinal storage
+
+### BACK-416 - Create a child task from a parent one in the UI

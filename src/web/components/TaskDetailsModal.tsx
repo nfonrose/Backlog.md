@@ -17,8 +17,10 @@ interface Props {
   onSaved?: () => Promise<void> | void; // refresh callback
   onSubmit?: (taskData: Partial<Task>) => Promise<void>; // For creating new tasks
   onArchive?: () => void; // For archiving tasks
+  onCreateChild?: (parentId: string) => void; // For creating a child task
   availableStatuses?: string[]; // Available statuses for new tasks
   isDraftMode?: boolean; // Whether creating a draft
+  prefilledData?: Partial<Task>; // Data to pre-fill in create mode
   availableMilestones?: string[];
   milestoneEntities?: Milestone[];
   archivedMilestoneEntities?: Milestone[];
@@ -55,11 +57,13 @@ export const TaskDetailsModal: React.FC<Props> = ({
   onSaved,
   onSubmit,
   onArchive,
+  onCreateChild,
   availableStatuses,
   availableMilestones: _availableMilestones,
   milestoneEntities,
   archivedMilestoneEntities,
   isDraftMode,
+  prefilledData,
   definitionOfDoneDefaults,
 }) => {
   const { theme } = useTheme();
@@ -224,6 +228,7 @@ export const TaskDetailsModal: React.FC<Props> = ({
   const [labels, setLabels] = useState<string[]>(task?.labels || []);
   const [priority, setPriority] = useState<string>(task?.priority || "");
   const [dependencies, setDependencies] = useState<string[]>(task?.dependencies || []);
+  const [parentTaskId, setParentTaskId] = useState<string | undefined>(task?.parentTaskId || prefilledData?.parentTaskId);
   const [references, setReferences] = useState<string[]>(task?.references || []);
   const [milestone, setMilestone] = useState<string>(task?.milestone || "");
   const [availableTasks, setAvailableTasks] = useState<Task[]>([]);
@@ -295,14 +300,15 @@ export const TaskDetailsModal: React.FC<Props> = ({
     setLabels(task?.labels || []);
     setPriority(task?.priority || "");
     setDependencies(task?.dependencies || []);
+    setParentTaskId(task?.parentTaskId || prefilledData?.parentTaskId);
     setReferences(task?.references || []);
     setMilestone(task?.milestone || "");
     setMode(isCreateMode ? "create" : "preview");
+    setSaving(false);
     setError(null);
     // Preload tasks for dependency picker
     apiClient.fetchTasks().then(setAvailableTasks).catch(() => setAvailableTasks([]));
-  }, [task, isOpen, isCreateMode, isDraftMode, availableStatuses, defaultDefinitionOfDone]);
-
+    }, [task, isOpen, isCreateMode, isDraftMode, availableStatuses, defaultDefinitionOfDone, prefilledData]);
   const handleCancelEdit = () => {
     if (isDirty) {
       const confirmDiscard = window.confirm("Discard unsaved changes?");
@@ -441,6 +447,7 @@ export const TaskDetailsModal: React.FC<Props> = ({
         labels,
         priority: (priority === "" ? undefined : priority) as "high" | "medium" | "low" | undefined,
         dependencies,
+        parentTaskId,
         milestone: milestone.trim().length > 0 ? milestone.trim() : undefined,
       };
 
@@ -518,6 +525,7 @@ export const TaskDetailsModal: React.FC<Props> = ({
     if (updates.labels !== undefined) setLabels(updates.labels as string[]);
     if (updates.priority !== undefined) setPriority(String(updates.priority));
     if (updates.dependencies !== undefined) setDependencies(updates.dependencies as string[]);
+    if (updates.parentTaskId !== undefined) setParentTaskId(updates.parentTaskId as string);
     if (updates.references !== undefined) setReferences(updates.references as string[]);
     if (updates.milestone !== undefined) setMilestone((updates.milestone ?? "") as string);
 
@@ -1049,6 +1057,17 @@ export const TaskDetailsModal: React.FC<Props> = ({
               label=""
               disabled={isFromOtherBranch}
             />
+            {task && onCreateChild && !isFromOtherBranch && (
+              <button
+                onClick={() => onCreateChild(task.id)}
+                className="mt-3 w-full inline-flex items-center justify-center px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create new child-task
+              </button>
+            )}
           </div>
 
           {/* Archive button at bottom of sidebar */}
