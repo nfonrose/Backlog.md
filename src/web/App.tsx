@@ -196,7 +196,7 @@ const canonicalizeMilestone = (value: string | null | undefined, aliasMap?: Map<
  */
 type TaskModalState =
   | { kind: 'closed' }
-  | { kind: 'create'; isDraft: boolean }
+  | { kind: 'create'; isDraft: boolean; parentTaskId?: string }
   | {
       kind: 'detail';
       session: number;
@@ -521,6 +521,14 @@ function AppContent() {
   const handleNewDraft = () => {
     // Create a draft task (same as new task but with status 'Draft')
     setModal({ kind: 'create', isDraft: true });
+  };
+
+  const handleCreateChildTask = (parentTaskId: string) => {
+    // Leave the parent's task route first, otherwise the route reader reopens the parent.
+    if (routeBasePath && routeTaskId) {
+      navigate(`${routeBasePath}${location.search}`, { replace: true });
+    }
+    setModal({ kind: 'create', isDraft: false, parentTaskId });
   };
 
   const openTaskModal = useCallback(
@@ -1076,6 +1084,8 @@ function AppContent() {
         onSubmit={handleSubmitTask}
         onArchive={editingTask ? () => handleArchiveTask(editingTask.id) : undefined}
         onDependencyCleanup={reportDependencyCleanup}
+        onCreateChild={handleCreateChildTask}
+        createParentTaskId={modal.kind === 'create' ? modal.parentTaskId : undefined}
         availableStatuses={isDraftMode ? ['Draft', ...statuses] : statuses}
         availableTasks={tasks}
         onNavigateToTask={handleEditTask}

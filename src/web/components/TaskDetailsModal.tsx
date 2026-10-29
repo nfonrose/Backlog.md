@@ -28,6 +28,8 @@ interface Props {
   onSubmit?: (taskData: Partial<Task>) => Promise<void>; // For creating new tasks
   onArchive?: () => Promise<void> | void; // For archiving tasks
   onDependencyCleanup?: (taskId: string, cleanedTaskIds: string[]) => void; // Reports records that lost a reference
+  onCreateChild?: (parentTaskId: string) => void; // Opens the create form for a child of this task
+  createParentTaskId?: string; // Parent of the task being created
   availableStatuses?: string[]; // Available statuses for new tasks
   availableTasks?: Task[]; // Shared task corpus for dependency selection
   onNavigateToTask?: (task: Task) => void; // Opens another task, preserving close/back context
@@ -183,6 +185,8 @@ export const TaskDetailsModal: React.FC<Props> = ({
   onSubmit,
   onArchive,
   onDependencyCleanup,
+  onCreateChild,
+  createParentTaskId,
   availableStatuses = EMPTY_STATUSES,
   availableTasks = EMPTY_TASKS,
   onNavigateToTask,
@@ -832,6 +836,7 @@ export const TaskDetailsModal: React.FC<Props> = ({
       // re-send a value the form never showed -- clearing a stale project when none are
       // configured, or failing the whole save when the stored value is no longer valid.
       if (isCreateMode) {
+        if (createParentTaskId) taskData.parentTaskId = createParentTaskId;
         taskData.type = taskType;
         taskData.project = project.trim().length > 0 ? project.trim() : undefined;
       }
@@ -1116,7 +1121,7 @@ export const TaskDetailsModal: React.FC<Props> = ({
         refreshAfterCommentChange();
         onClose();
       }}
-      title={isCreateMode ? (isDraftMode ? "Create New Draft" : "Create New Task") : `${displayId} — ${task.title}`}
+      title={isCreateMode ? (isDraftMode ? "Create New Draft" : createParentTaskId ? `Create New Child Task of ${createParentTaskId}` : "Create New Task") : `${displayId} — ${task.title}`}
       maxWidthClass="max-w-5xl"
       disableEscapeClose={mode === "edit" || mode === "create" || demoting}
       actions={
@@ -1906,6 +1911,17 @@ export const TaskDetailsModal: React.FC<Props> = ({
                 <span aria-hidden="true">{shownReadiness.isReady ? '✓' : '⏳'}</span>
                 <span>{shownReadiness.isReady ? 'Ready to start' : formatReadinessBlockers(shownReadiness)}</span>
               </div>
+            )}
+            {task && onCreateChild && !isReadOnly && (
+              <button
+                onClick={() => onCreateChild(task.id)}
+                className="mt-3 w-full inline-flex items-center justify-center px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 focus:ring-blue-400 dark:focus:ring-blue-500 transition-colors duration-200"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create new child-task
+              </button>
             )}
           </div>
 
