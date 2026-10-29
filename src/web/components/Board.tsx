@@ -43,6 +43,7 @@ interface BoardProps {
   availableProjects?: string[];
   onFiltersChange?: (filters: { assignee: string; labels: string[]; priority: string; taskType: string; project: string }) => void;
   hideEmptyColumns?: boolean;
+  sortDoneByRecency?: boolean;
   dateFormat?: string;
 }
 
@@ -79,6 +80,7 @@ const Board: React.FC<BoardProps> = ({
   availableProjects,
   onFiltersChange,
   hideEmptyColumns = false,
+  sortDoneByRecency = false,
   dateFormat,
 }) => {
   const [updateError, setUpdateError] = useState<string | null>(null);
@@ -477,8 +479,9 @@ const Board: React.FC<BoardProps> = ({
       archivedMilestoneIds,
       milestoneEntities,
       archivedMilestones,
+      sortDoneByRecency,
     }),
-    [laneMode, lanes, statuses, tasks, archivedMilestoneIds, milestoneEntities, archivedMilestones]
+    [laneMode, lanes, statuses, tasks, archivedMilestoneIds, milestoneEntities, archivedMilestones, sortDoneByRecency]
   );
 
   // Separate grouping for filtered display in columns
@@ -488,8 +491,9 @@ const Board: React.FC<BoardProps> = ({
         archivedMilestoneIds,
         milestoneEntities,
         archivedMilestones,
+        sortDoneByRecency,
       }),
-    [laneMode, lanes, statuses, filteredTasks, archivedMilestoneIds, milestoneEntities, archivedMilestones]
+    [laneMode, lanes, statuses, filteredTasks, archivedMilestoneIds, milestoneEntities, archivedMilestones, sortDoneByRecency]
   );
 
   const displayTasksByLane = (milestoneFilter || hasActiveFilters) ? filteredTasksByLane : tasksByLane;

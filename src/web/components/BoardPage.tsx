@@ -22,6 +22,7 @@ interface BoardPageProps {
 	loadingMessage?: string | null;
 	loadError?: Error | null;
 	hideEmptyColumns?: boolean;
+	sortDoneByRecency?: boolean;
 	dateFormat?: string;
 	availablePriorities?: string[];
 	availableTypes?: string[];
@@ -43,6 +44,7 @@ export default function BoardPage({
 	loadingMessage,
 	loadError,
 	hideEmptyColumns,
+	sortDoneByRecency,
 	dateFormat,
 	availablePriorities,
 	availableTypes,
@@ -218,6 +220,7 @@ export default function BoardPage({
 				availableProjects={availableProjects}
 				onFiltersChange={handleFiltersChange}
 				hideEmptyColumns={hideEmptyColumns}
+				sortDoneByRecency={sortDoneByRecency}
 				dateFormat={dateFormat}
 			/>
 		</div>

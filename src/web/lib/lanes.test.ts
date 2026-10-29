@@ -28,6 +28,19 @@ describe("buildLanes", () => {
 		expect(sortTasksForStatus(tasks, "To Do").map((task) => task.id)).toEqual(["task-1", "task-2"]);
 		expect(sortTasksForStatus(tasks, "Done").map((task) => task.id)).toEqual(["task-2", "task-1"]);
 	});
+	it("orders Done by recency over ordinals when sortDoneByRecency is enabled", () => {
+		const tasks = [
+			makeTask({ id: "task-1", status: "Done", ordinal: 10, updatedDate: "2024-01-01 09:00" }),
+			makeTask({ id: "task-2", status: "Done", ordinal: 20, updatedDate: "2024-01-05 09:00" }),
+			makeTask({ id: "task-3", status: "Done", updatedDate: "2024-01-03 09:00" }),
+		];
+		expect(sortTasksForStatus(tasks, "Done").map((task) => task.id)).toEqual(["task-1", "task-2", "task-3"]);
+		expect(sortTasksForStatus(tasks, "Done", { sortDoneByRecency: true }).map((task) => task.id)).toEqual([
+			"task-2",
+			"task-3",
+			"task-1",
+		]);
+	});
 	it("creates milestone lanes including No milestone and task-discovered milestones", () => {
 		const tasks = [
 			makeTask({ id: "task-1", milestone: "M1" }),

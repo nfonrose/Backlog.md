@@ -2365,6 +2365,9 @@ ${description || `Milestone: ${title}`}`,
 				case "hide_empty_columns":
 					config.hideEmptyColumns = value.toLowerCase() === "true";
 					break;
+				case "sort_done_by_recency":
+					config.sortDoneByRecency = value.toLowerCase() === "true";
+					break;
 				case "default_port":
 					config.defaultPort = Number.parseInt(value, 10);
 					break;
@@ -2421,6 +2424,7 @@ ${description || `Milestone: ${title}`}`,
 			defaultEditor: config.defaultEditor,
 			autoOpenBrowser: config.autoOpenBrowser,
 			hideEmptyColumns: config.hideEmptyColumns,
+			sortDoneByRecency: config.sortDoneByRecency,
 			defaultPort: config.defaultPort,
 			remoteOperations: config.remoteOperations,
 			autoCommit: config.autoCommit,
@@ -2461,6 +2465,7 @@ ${description || `Milestone: ${title}`}`,
 			...(config.defaultEditor ? [`default_editor: "${config.defaultEditor}"`] : []),
 			...(typeof config.autoOpenBrowser === "boolean" ? [`auto_open_browser: ${config.autoOpenBrowser}`] : []),
 			...(typeof config.hideEmptyColumns === "boolean" ? [`hide_empty_columns: ${config.hideEmptyColumns}`] : []),
+			...(typeof config.sortDoneByRecency === "boolean" ? [`sort_done_by_recency: ${config.sortDoneByRecency}`] : []),
 			...(config.defaultPort ? [`default_port: ${config.defaultPort}`] : []),
 			...(typeof config.remoteOperations === "boolean" ? [`remote_operations: ${config.remoteOperations}`] : []),
 			...(typeof config.autoCommit === "boolean" ? [`auto_commit: ${config.autoCommit}`] : []),

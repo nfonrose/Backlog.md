@@ -203,10 +203,19 @@ export function buildLanes(
 	];
 }
 
-export function sortTasksForStatus(tasks: Task[], status: string): Task[] {
+export function sortTasksForStatus(tasks: Task[], status: string, options?: { sortDoneByRecency?: boolean }): Task[] {
 	const isDoneStatus = status.toLowerCase().includes("done") || status.toLowerCase().includes("complete");
 
 	return tasks.slice().sort((a, b) => {
+		// Hand-set ordinals would otherwise keep old tasks at the top of Done.
+		if (isDoneStatus && options?.sortDoneByRecency) {
+			const aTime = parseStoredUtcDate(a.updatedDate || a.createdDate)?.getTime();
+			const bTime = parseStoredUtcDate(b.updatedDate || b.createdDate)?.getTime();
+			if (aTime !== undefined && bTime !== undefined && aTime !== bTime) {
+				return bTime - aTime;
+			}
+		}
+
 		// Tasks with ordinal come before tasks without
 		if (a.ordinal !== undefined && b.ordinal === undefined) {
 			return -1;
@@ -332,7 +341,12 @@ export function groupTasksByLaneAndStatus(
 	lanes: LaneDefinition[],
 	statuses: string[],
 	tasks: Task[],
-	options?: { archivedMilestoneIds?: string[]; milestoneEntities?: Milestone[]; archivedMilestones?: Milestone[] },
+	options?: {
+		archivedMilestoneIds?: string[];
+		milestoneEntities?: Milestone[];
+		archivedMilestones?: Milestone[];
+		sortDoneByRecency?: boolean;
+	},
 ): Map<string, Map<string, Task[]>> {
 	const result = new Map<string, Map<string, Task[]>>();
 	const archivedKeys = new Set((options?.archivedMilestoneIds ?? []).map((id) => milestoneKey(id)));
@@ -382,7 +396,7 @@ export function groupTasksByLaneAndStatus(
 
 	for (const [, statusMap] of result) {
 		for (const [status, list] of statusMap) {
-			statusMap.set(status, sortTasksForStatus(list, status));
+			statusMap.set(status, sortTasksForStatus(list, status, { sortDoneByRecency: options?.sortDoneByRecency }));
 		}
 	}
 

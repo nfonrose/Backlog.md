@@ -956,6 +956,7 @@ function AppContent() {
       isLoading={isLoading}
       loadError={loadError}
       hideEmptyColumns={config?.hideEmptyColumns ?? false}
+      sortDoneByRecency={config?.sortDoneByRecency ?? false}
       dateFormat={config?.dateFormat}
       availablePriorities={config?.priorities}
       availableTypes={availableTypes}
