@@ -2,7 +2,7 @@ import { type FSWatcher, watch } from "node:fs";
 import { readdir, stat } from "node:fs/promises";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { FileSystem } from "../file-system/operations.ts";
-import { parseDecision, parseDocument, parseTask } from "../markdown/parser.ts";
+import { parseDecision, parseDocument } from "../markdown/parser.ts";
 import type { BacklogConfig, Decision, Document, Task, TaskListFilter } from "../types/index.ts";
 import { watchConfigFile } from "../utils/config-watcher.ts";
 import { documentIdKey, documentIdsEqual } from "../utils/document-id.ts";
@@ -10,7 +10,7 @@ import { normalizeDocumentRelativePath } from "../utils/document-path.ts";
 import { normalizePriorityValue } from "../utils/priority-config.ts";
 import { matchesProjectFilter } from "../utils/project-config.ts";
 import { normalizeStatusSet, statusMatchesSet } from "../utils/status-filter.ts";
-import { canonicalTaskId, normalizeTaskId, normalizeTaskIdentity, taskIdsEqual } from "../utils/task-path.ts";
+import { canonicalTaskId, normalizeTaskId, taskIdsEqual } from "../utils/task-path.ts";
 import { sortByTaskId } from "../utils/task-sorting.ts";
 import { matchesTaskTypeFilter } from "../utils/task-type-config.ts";
 import { parseStoredUtcDate } from "../utils/utc-timestamp.ts";
@@ -1105,7 +1105,7 @@ export class ContentStore {
 						epoch,
 						readEventPath: async () => {
 							if (!(await Bun.file(fullPath).exists())) return null;
-							const task = { ...normalizeTaskIdentity(parseTask(await Bun.file(fullPath).text())), filePath: fullPath };
+							const task = await this.filesystem.readTaskFile(fullPath);
 							return task;
 						},
 						findIdentity: async () => {
@@ -1117,10 +1117,7 @@ export class ContentStore {
 									return candidateId ? taskIdsEqual(candidateId, normalizedTaskId) : false;
 								},
 								async (candidatePath) => {
-									const task = {
-										...normalizeTaskIdentity(parseTask(await Bun.file(candidatePath).text())),
-										filePath: candidatePath,
-									};
+									const task = await this.filesystem.readTaskFile(candidatePath);
 									if (!taskIdsEqual(task.id, normalizedTaskId)) throw new Error("Task identity mismatch");
 									return task;
 								},
@@ -1153,7 +1150,7 @@ export class ContentStore {
 						return false;
 					}
 					try {
-						const task = { ...normalizeTaskIdentity(parseTask(await Bun.file(fullPath).text())), filePath: fullPath };
+						const task = await this.filesystem.readTaskFile(fullPath);
 						if (!taskIdsEqual(task.id, normalizedTaskId)) {
 							this.publishWatchedTask(task);
 							return false;
@@ -1431,7 +1428,7 @@ export class ContentStore {
 		this.filesystem.saveTask = (async (task: Task, originalContent?: string): Promise<string> => {
 			const owner: PublicationOwner = { root: this.currentRoot() };
 			const result = await originalSaveTask.call(this.filesystem, task, originalContent);
-			const savedTask = { ...normalizeTaskIdentity(parseTask(await Bun.file(result).text())), filePath: result };
+			const savedTask = await this.filesystem.readTaskFile(result);
 			await this.updateTaskFromDisk(task.id, owner, savedTask);
 			return result;
 		}) as FileSystem["saveTask"];

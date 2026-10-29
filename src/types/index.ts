@@ -407,6 +407,8 @@ export interface BacklogConfig {
 	hideEmptyColumns?: boolean;
 	/** When true, the Done column lists the most recently updated tasks first, ignoring ordinals. Defaults to false. */
 	sortDoneByRecency?: boolean;
+	/** When true, task ordinals live in `backlog/task-ordinals.yml` instead of each task file, so reordering cards changes one file. Defaults to false. */
+	centralizedTasksOrdinals?: boolean;
 	remoteOperations?: boolean;
 	autoCommit?: boolean;
 	/** Disable all Git integration for filesystem-only projects. */

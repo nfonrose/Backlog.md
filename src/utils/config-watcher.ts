@@ -20,6 +20,7 @@ const BOOLEAN_CONFIG_KEYS = new Set([
 	"auto_open_browser",
 	"hide_empty_columns",
 	"sort_done_by_recency",
+	"centralized_tasks_ordinals",
 	"remote_operations",
 	"auto_commit",
 	"filesystem_only",

@@ -16,7 +16,6 @@ import {
 } from "../file-system/operations.ts";
 import { type GitBranchTip, type GitIndexEntry, GitOperations } from "../git/operations.ts";
 import { FrontmatterReferenceError } from "../markdown/frontmatter.ts";
-import { parseTask } from "../markdown/parser.ts";
 import { serializeDecision } from "../markdown/serializer.ts";
 import {
 	assertSectionInputHasNoMarkerLines,
@@ -103,7 +102,6 @@ import {
 	getTaskPath,
 	LOCAL_TASK_LOOKUP_HINT,
 	normalizeTaskId,
-	normalizeTaskIdentity,
 	taskIdsEqual,
 } from "../utils/task-path.ts";
 import { applyTaskFilters, createTaskSearchIndex } from "../utils/task-search.ts";
@@ -5003,9 +5001,7 @@ export class Core {
 		// known on-disk path is attached to reloaded tasks so contentStore publication works.
 		const reloadTaskAfterEdit = async (path: string): Promise<{ task: Task } | { failure: "unreadable" }> => {
 			try {
-				const content = await Bun.file(path).text();
-				const reparsed = normalizeTaskIdentity(parseTask(content));
-				return { task: { ...reparsed, filePath: path } };
+				return { task: await this.fs.readTaskFile(path) };
 			} catch {
 				return { failure: "unreadable" };
 			}

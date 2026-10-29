@@ -401,6 +401,9 @@ export class FileSystem {
 	private cachedConfigSnapshot: { path: string; content: string } | null = null;
 	private readonly parsedTaskFiles = new Map<string, ParsedTaskFile>();
 	private taskParseCacheEpoch = 0;
+	private taskOrdinalsCache: { content: string; ordinals: Map<string, number> } | null = null;
+	// Ordinal writes are read-modify-write on one file, so they run one at a time.
+	private taskOrdinalsWrite: Promise<unknown> = Promise.resolve();
 	private taskFileReadGeneration = 0;
 	private readonly taskFileReadGenerations = new Map<string, number>();
 	private activeTaskFileReads = 0;
@@ -931,16 +934,158 @@ export class FileSystem {
 				? existingTask.parentTaskId
 				: normalizedParentTaskId;
 
+		const centralOrdinals = await this.centralizedOrdinalsEnabled();
 		// Normalize new task IDs before serialization, but preserve existing file identity on updates.
 		const normalizedTask = {
 			...task,
 			id: persistedTaskId,
 			parentTaskId: persistedParentTaskId,
+			...(centralOrdinals ? { ordinal: undefined } : {}),
 		};
 		const content = serializeTask(normalizedTask, originalContent);
 
+		if (centralOrdinals) {
+			await this.setCentralOrdinal(persistedTaskId, task.ordinal);
+		}
+		// A reorder saves every task it renumbers; with central ordinals most files did not change.
+		if (loadedFromPath === filepath && sourceContent === undefined && originalContent === content) {
+			return filepath;
+		}
 		await this.writeRecordFile(filepath, content, loadedFromPath);
 		return filepath;
+	}
+
+	// ───────────── centralized ordinals (`centralized_tasks_ordinals`) ─────────────
+
+	private get taskOrdinalsPath(): string {
+		return join(this.resolvedBacklogDir, DEFAULT_FILES.TASK_ORDINALS);
+	}
+
+	private async centralizedOrdinalsEnabled(): Promise<boolean> {
+		return (await this.loadConfig())?.centralizedTasksOrdinals === true;
+	}
+
+	private parseTaskOrdinals(content: string): Map<string, number> {
+		const ordinals = new Map<string, number>();
+		for (const line of content.split("\n")) {
+			const trimmed = line.trim();
+			if (!trimmed || trimmed.startsWith("#")) continue;
+			const colon = trimmed.indexOf(":");
+			if (colon === -1) continue;
+			const value = Number.parseFloat(trimmed.slice(colon + 1).trim());
+			if (Number.isFinite(value)) ordinals.set(trimmed.slice(0, colon).trim().toUpperCase(), value);
+		}
+		return ordinals;
+	}
+
+	/** Ordinals keyed by upper-case task ID; empty when the file does not exist yet. */
+	async loadTaskOrdinals(): Promise<Map<string, number>> {
+		let content = "";
+		try {
+			const file = Bun.file(this.taskOrdinalsPath);
+			if (await file.exists()) content = await file.text();
+		} catch {
+			content = "";
+		}
+		if (this.taskOrdinalsCache?.content !== content) {
+			this.taskOrdinalsCache = { content, ordinals: this.parseTaskOrdinals(content) };
+		}
+		return new Map(this.taskOrdinalsCache.ordinals);
+	}
+
+	private async saveTaskOrdinals(ordinals: Map<string, number>): Promise<void> {
+		// Sorted by ID so concurrent edits on two branches merge line by line.
+		const lines = [...ordinals.entries()]
+			.sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true }))
+			.map(([id, value]) => `${id}: ${value}`);
+		const content = lines.length > 0 ? `${lines.join("\n")}\n` : "";
+		await this.ensureDirectoryExists(this.resolvedBacklogDir);
+		await Bun.write(this.taskOrdinalsPath, content);
+		this.taskOrdinalsCache = { content, ordinals: new Map(ordinals) };
+	}
+
+	private updateTaskOrdinals(change: (ordinals: Map<string, number>) => boolean): Promise<void> {
+		const run = this.taskOrdinalsWrite.then(async () => {
+			const ordinals = await this.loadTaskOrdinals();
+			if (change(ordinals)) await this.saveTaskOrdinals(ordinals);
+		});
+		this.taskOrdinalsWrite = run.catch(() => undefined);
+		return run;
+	}
+
+	private setCentralOrdinal(taskId: string, ordinal: number | undefined): Promise<void> {
+		const id = taskId.toUpperCase();
+		return this.updateTaskOrdinals((ordinals) => {
+			if (ordinal === undefined || !Number.isFinite(ordinal)) return ordinals.delete(id);
+			if (ordinals.get(id) === ordinal) return false;
+			ordinals.set(id, ordinal);
+			return true;
+		});
+	}
+
+	/**
+	 * Gives tasks their central ordinal. A task without an entry keeps the ordinal of its file, so
+	 * files written by a Backlog that does not know the option still sort as they did.
+	 */
+	async applyCentralOrdinals<T extends Task>(tasks: T[]): Promise<T[]> {
+		if (tasks.length === 0 || !(await this.centralizedOrdinalsEnabled())) return tasks;
+		const ordinals = await this.loadTaskOrdinals();
+		if (ordinals.size === 0) return tasks;
+		return tasks.map((task) => {
+			const ordinal = ordinals.get(task.id.toUpperCase());
+			return ordinal === undefined ? task : { ...task, ordinal };
+		});
+	}
+
+	/** Reads one local task file the way listings do, central ordinal included. */
+	async readTaskFile(filePath: string): Promise<Task> {
+		const task = { ...normalizeTaskIdentity(parseTask(await Bun.file(filePath).text())), filePath };
+		const [withOrdinal] = await this.applyCentralOrdinals([task]);
+		return withOrdinal ?? task;
+	}
+
+	/**
+	 * Moves the ordinals still written in task files into the central file and removes them from
+	 * the files. Ordinals already in the central file win. Does nothing unless the option is on.
+	 */
+	async migrateOrdinalsToCentralStorage(): Promise<{ migratedCount: number }> {
+		if (!(await this.centralizedOrdinalsEnabled())) return { migratedCount: 0 };
+		const tasksDir = await this.getTasksDir();
+		const taskPrefix = ((await this.loadConfig())?.prefixes?.task ?? "task").toLowerCase();
+		const files = await Array.fromAsync(
+			new Bun.Glob(buildGlobPattern(taskPrefix)).scan({ cwd: tasksDir, followSymlinks: true }),
+		);
+		let migratedCount = 0;
+		const found = new Map<string, number>();
+		const stripped: Array<{ path: string; content: string }> = [];
+		for (const file of files) {
+			const path = join(tasksDir, file);
+			const content = await Bun.file(path).text();
+			let task: Task;
+			try {
+				task = normalizeTaskIdentity(parseTask(content));
+			} catch {
+				continue;
+			}
+			if (task.ordinal === undefined) continue;
+			if (Number.isFinite(task.ordinal)) found.set(task.id.toUpperCase(), task.ordinal);
+			const withoutOrdinal = content.replace(/^(---\r?\n[\s\S]*?)^ordinal:[^\n]*\n([\s\S]*?^---)/m, "$1$2");
+			if (withoutOrdinal !== content) stripped.push({ path, content: withoutOrdinal });
+		}
+		await this.updateTaskOrdinals((ordinals) => {
+			for (const [id, value] of found) {
+				if (!ordinals.has(id)) {
+					ordinals.set(id, value);
+					migratedCount++;
+				}
+			}
+			return migratedCount > 0;
+		});
+		// Files are cleaned only once their ordinal is safely in the central file.
+		for (const { path, content } of stripped) {
+			await Bun.write(path, content);
+		}
+		return { migratedCount };
 	}
 
 	/**
@@ -1010,9 +1155,7 @@ export class FileSystem {
 
 			if (!filepath) return null;
 
-			const content = await Bun.file(filepath).text();
-			const task = normalizeTaskIdentity(parseTask(content));
-			return { ...task, filePath: filepath };
+			return await this.readTaskFile(filepath);
 		} catch (error) {
 			if (isAmbiguousTaskIdError(error) || error instanceof TaskDependenciesParseError) throw error;
 			return null;
@@ -1123,14 +1266,16 @@ export class FileSystem {
 			return [];
 		}
 
-		let tasks = await this.readTaskFiles(
-			tasksDir,
-			taskFiles,
-			{
-				normalizeIdentity: true,
-				debugLabel: "task file",
-			},
-			cacheEpoch,
+		let tasks = await this.applyCentralOrdinals(
+			await this.readTaskFiles(
+				tasksDir,
+				taskFiles,
+				{
+					normalizeIdentity: true,
+					debugLabel: "task file",
+				},
+				cacheEpoch,
+			),
 		);
 
 		if (filter?.status) {
@@ -2285,9 +2430,13 @@ ${description || `Milestone: ${title}`}`,
 		}
 		const configPath = this.resolvedConfigPath;
 		const content = this.serializeConfig(normalizedConfig);
+		const wasCentralized = this.cachedConfig?.centralizedTasksOrdinals === true;
 		await Bun.write(configPath, content);
 		this.cachedConfig = normalizedConfig;
 		this.cachedConfigSnapshot = { path: configPath, content };
+		if (normalizedConfig.centralizedTasksOrdinals === true && !wasCentralized) {
+			await this.migrateOrdinalsToCentralStorage();
+		}
 	}
 
 	// Utility methods
@@ -2368,6 +2517,9 @@ ${description || `Milestone: ${title}`}`,
 				case "sort_done_by_recency":
 					config.sortDoneByRecency = value.toLowerCase() === "true";
 					break;
+				case "centralized_tasks_ordinals":
+					config.centralizedTasksOrdinals = value.toLowerCase() === "true";
+					break;
 				case "default_port":
 					config.defaultPort = Number.parseInt(value, 10);
 					break;
@@ -2425,6 +2577,7 @@ ${description || `Milestone: ${title}`}`,
 			autoOpenBrowser: config.autoOpenBrowser,
 			hideEmptyColumns: config.hideEmptyColumns,
 			sortDoneByRecency: config.sortDoneByRecency,
+			centralizedTasksOrdinals: config.centralizedTasksOrdinals,
 			defaultPort: config.defaultPort,
 			remoteOperations: config.remoteOperations,
 			autoCommit: config.autoCommit,
@@ -2466,6 +2619,9 @@ ${description || `Milestone: ${title}`}`,
 			...(typeof config.autoOpenBrowser === "boolean" ? [`auto_open_browser: ${config.autoOpenBrowser}`] : []),
 			...(typeof config.hideEmptyColumns === "boolean" ? [`hide_empty_columns: ${config.hideEmptyColumns}`] : []),
 			...(typeof config.sortDoneByRecency === "boolean" ? [`sort_done_by_recency: ${config.sortDoneByRecency}`] : []),
+			...(typeof config.centralizedTasksOrdinals === "boolean"
+				? [`centralized_tasks_ordinals: ${config.centralizedTasksOrdinals}`]
+				: []),
 			...(config.defaultPort ? [`default_port: ${config.defaultPort}`] : []),
 			...(typeof config.remoteOperations === "boolean" ? [`remote_operations: ${config.remoteOperations}`] : []),
 			...(typeof config.autoCommit === "boolean" ? [`auto_commit: ${config.autoCommit}`] : []),
